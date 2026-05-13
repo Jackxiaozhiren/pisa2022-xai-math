@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, Iterable, Tuple
+from typing import Any, Dict, Iterable, Optional, Tuple
 
 from .io import require_package
 
@@ -221,3 +221,293 @@ def optional_classification_models(enabled_names: Iterable[str] = ()) -> Dict[st
         except Exception:
             pass
     return models
+
+
+# ── Hyperparameter Tuning with Optuna ────────────────────────────────────────
+
+
+def _default_optuna_study_kwargs() -> Dict[str, Any]:
+    return {"direction": "minimize", "sampler": None, "pruner": None}
+
+
+def tune_lightgbm_regressor(
+    x_train,
+    y_train,
+    x_val,
+    y_val,
+    n_trials: int = 50,
+    random_state: int = 20260510,
+) -> Dict[str, Any]:
+    require_package("lightgbm", "pip install lightgbm")
+    require_package("numpy", "pip install -r requirements.txt")
+    require_package("sklearn", "pip install -r requirements.txt")
+    import numpy as np
+    from lightgbm import LGBMRegressor
+    from sklearn.metrics import mean_squared_error
+
+    try:
+        import optuna
+    except Exception:
+        return {}
+
+    def objective(trial):
+        params = {
+            "n_estimators": trial.suggest_int("n_estimators", 100, 800),
+            "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.2, log=True),
+            "num_leaves": trial.suggest_int("num_leaves", 15, 127),
+            "max_depth": trial.suggest_int("max_depth", 3, 12),
+            "min_child_samples": trial.suggest_int("min_child_samples", 20, 200),
+            "subsample": trial.suggest_float("subsample", 0.6, 1.0),
+            "colsample_bytree": trial.suggest_float("colsample_bytree", 0.6, 1.0),
+            "reg_alpha": trial.suggest_float("reg_alpha", 1e-8, 1.0, log=True),
+            "reg_lambda": trial.suggest_float("reg_lambda", 1e-8, 1.0, log=True),
+            "random_state": random_state,
+            "n_jobs": -1,
+            "verbose": -1,
+        }
+        model = LGBMRegressor(**params)
+        model.fit(x_train, y_train)
+        preds = model.predict(x_val)
+        return float(np.sqrt(mean_squared_error(y_val, preds)))
+
+    study = optuna.create_study(**_default_optuna_study_kwargs())
+    study.optimize(objective, n_trials=n_trials, show_progress_bar=False)
+    return study.best_params
+
+
+def tune_lightgbm_classifier(
+    x_train,
+    y_train,
+    x_val,
+    y_val,
+    n_trials: int = 50,
+    random_state: int = 20260510,
+) -> Dict[str, Any]:
+    require_package("lightgbm", "pip install lightgbm")
+    require_package("numpy", "pip install -r requirements.txt")
+    require_package("sklearn", "pip install -r requirements.txt")
+    import numpy as np
+    from lightgbm import LGBMClassifier
+    from sklearn.metrics import log_loss
+
+    try:
+        import optuna
+    except Exception:
+        return {}
+
+    def objective(trial):
+        params = {
+            "n_estimators": trial.suggest_int("n_estimators", 100, 800),
+            "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.2, log=True),
+            "num_leaves": trial.suggest_int("num_leaves", 15, 127),
+            "max_depth": trial.suggest_int("max_depth", 3, 12),
+            "min_child_samples": trial.suggest_int("min_child_samples", 20, 200),
+            "subsample": trial.suggest_float("subsample", 0.6, 1.0),
+            "colsample_bytree": trial.suggest_float("colsample_bytree", 0.6, 1.0),
+            "reg_alpha": trial.suggest_float("reg_alpha", 1e-8, 1.0, log=True),
+            "reg_lambda": trial.suggest_float("reg_lambda", 1e-8, 1.0, log=True),
+            "random_state": random_state,
+            "n_jobs": -1,
+            "verbose": -1,
+        }
+        model = LGBMClassifier(**params)
+        model.fit(x_train, y_train)
+        preds = model.predict_proba(x_val)[:, 1]
+        return float(log_loss(y_val, preds))
+
+    study = optuna.create_study(**_default_optuna_study_kwargs())
+    study.optimize(objective, n_trials=n_trials, show_progress_bar=False)
+    return study.best_params
+
+
+def tune_xgboost_regressor(
+    x_train,
+    y_train,
+    x_val,
+    y_val,
+    n_trials: int = 50,
+    random_state: int = 20260510,
+) -> Dict[str, Any]:
+    require_package("xgboost", "pip install xgboost")
+    require_package("numpy", "pip install -r requirements.txt")
+    require_package("sklearn", "pip install -r requirements.txt")
+    import numpy as np
+    from sklearn.metrics import mean_squared_error
+    from xgboost import XGBRegressor
+
+    try:
+        import optuna
+    except Exception:
+        return {}
+
+    def objective(trial):
+        params = {
+            "n_estimators": trial.suggest_int("n_estimators", 100, 800),
+            "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.2, log=True),
+            "max_depth": trial.suggest_int("max_depth", 3, 10),
+            "min_child_weight": trial.suggest_int("min_child_weight", 1, 50),
+            "subsample": trial.suggest_float("subsample", 0.6, 1.0),
+            "colsample_bytree": trial.suggest_float("colsample_bytree", 0.6, 1.0),
+            "reg_alpha": trial.suggest_float("reg_alpha", 1e-8, 1.0, log=True),
+            "reg_lambda": trial.suggest_float("reg_lambda", 1e-8, 1.0, log=True),
+            "objective": "reg:squarederror",
+            "tree_method": "hist",
+            "random_state": random_state,
+            "n_jobs": -1,
+        }
+        model = XGBRegressor(**params)
+        model.fit(x_train, y_train)
+        preds = model.predict(x_val)
+        return float(np.sqrt(mean_squared_error(y_val, preds)))
+
+    study = optuna.create_study(**_default_optuna_study_kwargs())
+    study.optimize(objective, n_trials=n_trials, show_progress_bar=False)
+    return study.best_params
+
+
+def tune_xgboost_classifier(
+    x_train,
+    y_train,
+    x_val,
+    y_val,
+    n_trials: int = 50,
+    random_state: int = 20260510,
+) -> Dict[str, Any]:
+    require_package("xgboost", "pip install xgboost")
+    require_package("numpy", "pip install -r requirements.txt")
+    require_package("sklearn", "pip install -r requirements.txt")
+    import numpy as np
+    from sklearn.metrics import log_loss
+    from xgboost import XGBClassifier
+
+    try:
+        import optuna
+    except Exception:
+        return {}
+
+    def objective(trial):
+        params = {
+            "n_estimators": trial.suggest_int("n_estimators", 100, 800),
+            "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.2, log=True),
+            "max_depth": trial.suggest_int("max_depth", 3, 10),
+            "min_child_weight": trial.suggest_int("min_child_weight", 1, 50),
+            "subsample": trial.suggest_float("subsample", 0.6, 1.0),
+            "colsample_bytree": trial.suggest_float("colsample_bytree", 0.6, 1.0),
+            "reg_alpha": trial.suggest_float("reg_alpha", 1e-8, 1.0, log=True),
+            "reg_lambda": trial.suggest_float("reg_lambda", 1e-8, 1.0, log=True),
+            "objective": "binary:logistic",
+            "eval_metric": "logloss",
+            "tree_method": "hist",
+            "random_state": random_state,
+            "n_jobs": -1,
+        }
+        model = XGBClassifier(**params)
+        model.fit(x_train, y_train)
+        preds = model.predict_proba(x_val)[:, 1]
+        return float(log_loss(y_val, preds))
+
+    study = optuna.create_study(**_default_optuna_study_kwargs())
+    study.optimize(objective, n_trials=n_trials, show_progress_bar=False)
+    return study.best_params
+
+
+# ── Stacking Ensemble Models ─────────────────────────────────────────────────
+
+
+def build_stacking_regressor(
+    random_state: int = 20260510,
+) -> object:
+    require_package("sklearn", "pip install -r requirements.txt")
+    from sklearn.ensemble import (
+        HistGradientBoostingRegressor,
+        RandomForestRegressor,
+        StackingRegressor,
+    )
+    from sklearn.linear_model import Ridge
+
+    base_estimators = [
+        ("rf", RandomForestRegressor(
+            n_estimators=200, min_samples_leaf=50, max_features="sqrt",
+            max_samples=0.7, n_jobs=-1, random_state=random_state,
+        )),
+        ("hgb", HistGradientBoostingRegressor(
+            max_iter=300, learning_rate=0.05, l2_regularization=0.05,
+            random_state=random_state,
+        )),
+    ]
+    try:
+        from lightgbm import LGBMRegressor
+        base_estimators.append(("lightgbm", LGBMRegressor(
+            n_estimators=300, learning_rate=0.05, num_leaves=31,
+            min_child_samples=80, random_state=random_state,
+            n_jobs=-1, verbose=-1,
+        )))
+    except Exception:
+        pass
+    try:
+        from xgboost import XGBRegressor
+        base_estimators.append(("xgboost", XGBRegressor(
+            n_estimators=300, learning_rate=0.05, max_depth=4,
+            subsample=0.85, colsample_bytree=0.85,
+            objective="reg:squarederror", tree_method="hist",
+            random_state=random_state, n_jobs=-1,
+        )))
+    except Exception:
+        pass
+
+    return StackingRegressor(
+        estimators=base_estimators,
+        final_estimator=Ridge(alpha=1.0, random_state=random_state),
+        cv=5,
+        n_jobs=-1,
+    )
+
+
+def build_stacking_classifier(
+    random_state: int = 20260510,
+) -> object:
+    require_package("sklearn", "pip install -r requirements.txt")
+    from sklearn.ensemble import (
+        HistGradientBoostingClassifier,
+        RandomForestClassifier,
+        StackingClassifier,
+    )
+    from sklearn.linear_model import LogisticRegression
+
+    base_estimators = [
+        ("rf", RandomForestClassifier(
+            n_estimators=200, min_samples_leaf=50, max_features="sqrt",
+            max_samples=0.7, n_jobs=-1, random_state=random_state,
+            class_weight="balanced_subsample",
+        )),
+        ("hgb", HistGradientBoostingClassifier(
+            max_iter=300, learning_rate=0.05, l2_regularization=0.05,
+            random_state=random_state,
+        )),
+    ]
+    try:
+        from lightgbm import LGBMClassifier
+        base_estimators.append(("lightgbm", LGBMClassifier(
+            n_estimators=300, learning_rate=0.05, num_leaves=31,
+            min_child_samples=80, random_state=random_state,
+            n_jobs=-1, verbose=-1,
+        )))
+    except Exception:
+        pass
+    try:
+        from xgboost import XGBClassifier
+        base_estimators.append(("xgboost", XGBClassifier(
+            n_estimators=300, learning_rate=0.05, max_depth=4,
+            subsample=0.85, colsample_bytree=0.85,
+            objective="binary:logistic", eval_metric="logloss",
+            tree_method="hist", random_state=random_state, n_jobs=-1,
+        )))
+    except Exception:
+        pass
+
+    return StackingClassifier(
+        estimators=base_estimators,
+        final_estimator=LogisticRegression(C=1.0, max_iter=3000, n_jobs=-1),
+        cv=5,
+        n_jobs=-1,
+    )

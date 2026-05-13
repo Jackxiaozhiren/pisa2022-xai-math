@@ -8,7 +8,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from pisa_xai.config import load_config, resolve_project_path
-from pisa_xai.explain import permutation_importance_table, save_shap_summary
+from pisa_xai.explain import (
+    compute_shap_interactions,
+    permutation_importance_table,
+    save_shap_dependence_plots,
+    save_shap_summary,
+)
 from pisa_xai.io import load_table, require_package
 
 
@@ -139,6 +144,44 @@ def main() -> int:
             tables_dir / "digital_feature_importance.csv",
             index=False,
         )
+
+    # ── SHAP interaction analysis (best classification model only) ──
+    best_clf_name = f"classification_{best['best_classification_model']}"
+    best_clf_path = model_dir / f"{best_clf_name}.joblib"
+    if best_clf_path.exists():
+        print(f"Computing SHAP interactions for {best_clf_name}", flush=True)
+        best_clf = joblib.load(best_clf_path)
+        x_interact = x.sample(min(shap_rows, len(x)), random_state=random_state)
+        shap_interact = compute_shap_interactions(best_clf, x_interact, max_rows=shap_rows)
+        if shap_interact is not None:
+            interact_table = f"shap_interactions_{best['best_classification_model']}.csv"
+            shap_interact.to_csv(tables_dir / interact_table, index=False)
+            explanation_rows.append(
+                {"model": best_clf_name, "artifact_type": "shap_interactions", "path": str(tables_dir / interact_table)}
+            )
+            print(f"Saved SHAP interactions: {tables_dir / interact_table}")
+
+        # SHAP dependence plots for key ICT feature pairs
+        ict_feature_pairs = []
+        ict_available = [f for f in ["ICTRES", "ICTEFFIC", "ICTSUBJ", "ICTHOME", "ICTSCH"] if f in x.columns]
+        for i in range(len(ict_available)):
+            for j in range(i + 1, len(ict_available)):
+                ict_feature_pairs.append((ict_available[i], ict_available[j]))
+        # Also add ICT × HOMEPOS and ICT × MATHEFF context pairs
+        for base in ["HOMEPOS", "MATHEFF"]:
+            if base in x.columns:
+                for ict_f in ict_available[:3]:  # top 3 ICT features
+                    ict_feature_pairs.append((ict_f, base))
+        if ict_feature_pairs:
+            print(f"Generating {len(ict_feature_pairs)} SHAP dependence plots", flush=True)
+            dep_paths = save_shap_dependence_plots(
+                best_clf, x_interact, figures_dir, ict_feature_pairs, max_rows=shap_rows
+            )
+            for dep_path in dep_paths or []:
+                explanation_rows.append(
+                    {"model": best_clf_name, "artifact_type": "shap_dependence", "path": str(dep_path)}
+                )
+
     pd.DataFrame(explanation_rows).to_csv(tables_dir / "explanation_artifacts.csv", index=False)
     return 0
 

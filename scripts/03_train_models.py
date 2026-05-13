@@ -12,7 +12,16 @@ from pisa_xai.config import load_config, resolve_project_path
 from pisa_xai.evaluation import classification_metrics, regression_metrics, threshold_sensitivity
 from pisa_xai.features import flatten_feature_config
 from pisa_xai.io import load_table, require_package
-from pisa_xai.modeling import classification_models, regression_models
+from pisa_xai.modeling import (
+    classification_models,
+    regression_models,
+    tune_lightgbm_regressor,
+    tune_lightgbm_classifier,
+    tune_xgboost_regressor,
+    tune_xgboost_classifier,
+    build_stacking_regressor,
+    build_stacking_classifier,
+)
 
 
 def model_predict_score(model, x):
@@ -156,7 +165,146 @@ def main() -> int:
         classification_scores[name] = score
         fitted[f"classification_{name}"] = model
 
-    results = pd.DataFrame(rows)
+    # ── Optuna hyperparameter tuning ─────────────────────────────────
+    tuning_rows = []
+    n_trials = config["models"].get("optuna_n_trials", 50)
+    # Create a validation split from the training set for tuning
+    val_size = 0.15  # 15% of training = 12% of total
+    train_sub_idx, val_idx = train_test_split(
+        train_idx,
+        test_size=val_size,
+        random_state=config["sample"]["random_state"],
+        stratify=y_clf.loc[train_idx],
+    )
+    x_tune, x_val = x.loc[train_sub_idx], x.loc[val_idx]
+    y_reg_tune, y_reg_val = y_reg.loc[train_sub_idx], y_reg.loc[val_idx]
+    y_clf_tune, y_clf_val = y_clf.loc[train_sub_idx], y_clf.loc[val_idx]
+
+    # XGBoost does not support pandas category dtypes — convert to numeric codes
+    cat_cols = [c for c in x.columns if str(x[c].dtype) == "category"]
+    if cat_cols:
+        x_tune_xgb = x_tune.copy()
+        x_val_xgb = x_val.copy()
+        x_train_xgb = x_train.copy()
+        x_test_xgb = x_test.copy()
+        for c in cat_cols:
+            x_tune_xgb[c] = x_tune_xgb[c].cat.codes.astype("int8")
+            x_val_xgb[c] = x_val_xgb[c].cat.codes.astype("int8")
+            x_train_xgb[c] = x_train_xgb[c].cat.codes.astype("int8")
+            x_test_xgb[c] = x_test_xgb[c].cat.codes.astype("int8")
+    else:
+        x_tune_xgb, x_val_xgb, x_train_xgb, x_test_xgb = x_tune, x_val, x_train, x_test
+
+    if "lightgbm" in enabled_optional:
+        print(f"Optuna tuning: LightGBM regressor ({n_trials} trials)", flush=True)
+        best_params = tune_lightgbm_regressor(
+            x_tune, y_reg_tune, x_val, y_reg_val,
+            n_trials=n_trials, random_state=config["sample"]["random_state"],
+        )
+        if best_params:
+            import lightgbm as lgb
+            lgb_reg_tuned = lgb.LGBMRegressor(**best_params, n_jobs=-1, verbose=-1)
+            lgb_reg_tuned.fit(x_train, y_reg_train)
+            pred_reg = lgb_reg_tuned.predict(x_test)
+            metrics_reg = regression_metrics(y_reg_test, pred_reg, sample_weight=w_test)
+            tuning_rows.append({"task": "regression", "model": "lightgbm_tuned", "feature_set": "main",
+                                "n_train": len(x_train), "n_test": len(x_test),
+                                "weighted_metrics": w_test is not None, **metrics_reg})
+            fitted["regression_lightgbm_tuned"] = lgb_reg_tuned
+            regression_predictions["lightgbm_tuned"] = pred_reg
+            pd.DataFrame([best_params]).to_csv(tables_dir / "hyperparameter_tuning_regression.csv", index=False)
+
+        print(f"Optuna tuning: LightGBM classifier ({n_trials} trials)", flush=True)
+        best_params_clf = tune_lightgbm_classifier(
+            x_tune, y_clf_tune, x_val, y_clf_val,
+            n_trials=n_trials, random_state=config["sample"]["random_state"],
+        )
+        if best_params_clf:
+            lgb_clf_tuned = lgb.LGBMClassifier(**best_params_clf, n_jobs=-1, verbose=-1)
+            lgb_clf_tuned.fit(x_train, y_clf_train)
+            score_clf = model_predict_score(lgb_clf_tuned, x_test)
+            metrics_clf = classification_metrics(
+                y_clf_test, score_clf, config["models"]["classification_threshold"], sample_weight=w_test
+            )
+            tuning_rows.append({"task": "classification", "model": "lightgbm_tuned", "feature_set": "main",
+                                "n_train": len(x_train), "n_test": len(x_test),
+                                "weighted_metrics": w_test is not None,
+                                "threshold": config["models"]["classification_threshold"], **metrics_clf})
+            fitted["classification_lightgbm_tuned"] = lgb_clf_tuned
+            classification_scores["lightgbm_tuned"] = score_clf
+            pd.DataFrame([best_params_clf]).to_csv(tables_dir / "hyperparameter_tuning_classification.csv", index=False)
+
+    if "xgboost" in enabled_optional:
+        print(f"Optuna tuning: XGBoost regressor ({n_trials} trials)", flush=True)
+        best_params_xgb = tune_xgboost_regressor(
+            x_tune_xgb, y_reg_tune, x_val_xgb, y_reg_val,
+            n_trials=n_trials, random_state=config["sample"]["random_state"],
+        )
+        if best_params_xgb:
+            import xgboost as xgb
+            xgb_reg_tuned = xgb.XGBRegressor(**best_params_xgb, n_jobs=-1, verbosity=0)
+            xgb_reg_tuned.fit(x_train_xgb, y_reg_train)
+            pred_reg = xgb_reg_tuned.predict(x_test_xgb)
+            metrics_reg = regression_metrics(y_reg_test, pred_reg, sample_weight=w_test)
+            tuning_rows.append({"task": "regression", "model": "xgboost_tuned", "feature_set": "main",
+                                "n_train": len(x_train), "n_test": len(x_test),
+                                "weighted_metrics": w_test is not None, **metrics_reg})
+            fitted["regression_xgboost_tuned"] = xgb_reg_tuned
+            regression_predictions["xgboost_tuned"] = pred_reg
+
+        print(f"Optuna tuning: XGBoost classifier ({n_trials} trials)", flush=True)
+        best_params_xgb_clf = tune_xgboost_classifier(
+            x_tune_xgb, y_clf_tune, x_val_xgb, y_clf_val,
+            n_trials=n_trials, random_state=config["sample"]["random_state"],
+        )
+        if best_params_xgb_clf:
+            xgb_clf_tuned = xgb.XGBClassifier(**best_params_xgb_clf, n_jobs=-1, verbosity=0)
+            xgb_clf_tuned.fit(x_train_xgb, y_clf_train)
+            score_clf = model_predict_score(xgb_clf_tuned, x_test_xgb)
+            metrics_clf = classification_metrics(
+                y_clf_test, score_clf, config["models"]["classification_threshold"], sample_weight=w_test
+            )
+            tuning_rows.append({"task": "classification", "model": "xgboost_tuned", "feature_set": "main",
+                                "n_train": len(x_train), "n_test": len(x_test),
+                                "weighted_metrics": w_test is not None,
+                                "threshold": config["models"]["classification_threshold"], **metrics_clf})
+            fitted["classification_xgboost_tuned"] = xgb_clf_tuned
+            classification_scores["xgboost_tuned"] = score_clf
+
+    # ── Stacking ensemble ────────────────────────────────────────────
+    if "lightgbm" in enabled_optional and "xgboost" in enabled_optional:
+        x_train_stack = x_train_xgb if cat_cols else x_train
+        x_test_stack = x_test_xgb if cat_cols else x_test
+
+        print("Building stacking regressor", flush=True)
+        stack_reg = build_stacking_regressor(random_state=config["sample"]["random_state"])
+        stack_reg.fit(x_train_stack, y_reg_train)
+        pred_reg = stack_reg.predict(x_test_stack)
+        metrics_reg = regression_metrics(y_reg_test, pred_reg, sample_weight=w_test)
+        tuning_rows.append({"task": "regression", "model": "stacking_ensemble", "feature_set": "main",
+                            "n_train": len(x_train), "n_test": len(x_test),
+                            "weighted_metrics": w_test is not None, **metrics_reg})
+        fitted["regression_stacking_ensemble"] = stack_reg
+        regression_predictions["stacking_ensemble"] = pred_reg
+
+        print("Building stacking classifier", flush=True)
+        stack_clf = build_stacking_classifier(random_state=config["sample"]["random_state"])
+        stack_clf.fit(x_train_stack, y_clf_train)
+        score_clf = model_predict_score(stack_clf, x_test_stack)
+        metrics_clf = classification_metrics(
+            y_clf_test, score_clf, config["models"]["classification_threshold"], sample_weight=w_test
+        )
+        tuning_rows.append({"task": "classification", "model": "stacking_ensemble", "feature_set": "main",
+                            "n_train": len(x_train), "n_test": len(x_test),
+                            "weighted_metrics": w_test is not None,
+                            "threshold": config["models"]["classification_threshold"], **metrics_clf})
+        fitted["classification_stacking_ensemble"] = stack_clf
+        classification_scores["stacking_ensemble"] = score_clf
+
+    if tuning_rows:
+        results = pd.concat([pd.DataFrame(rows), pd.DataFrame(tuning_rows)], ignore_index=True)
+    else:
+        results = pd.DataFrame(rows)
     results.to_csv(tables_dir / "model_metrics.csv", index=False)
     if threshold_rows:
         pd.concat(threshold_rows, ignore_index=True).to_csv(

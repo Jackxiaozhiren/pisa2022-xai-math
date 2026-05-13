@@ -13,6 +13,8 @@
 - `digital_feature_importance.csv`
 - `explanation_artifacts.csv`
 - `holdout_predictions.csv`
+- `hyperparameter_tuning_classification.csv`
+- `hyperparameter_tuning_regression.csv`
 - `model_metrics.csv`
 - `oecd_holdout_metrics.csv`
 - `regression_lightgbm_permutation_importance.csv`
@@ -25,6 +27,26 @@
 
 ## Figures
 
+- `calibration_curves.png`
 - `classification_lightgbm_shap_summary.png`
+- `conceptual_framework.png`
+- `country_heterogeneity.png`
 - `digital_feature_importance.png`
+- `methodology_flowchart.png`
 - `regression_lightgbm_shap_summary.png`
+- `shap_dependence_ICTEFFIC_vs_HOMEPOS.png`
+- `shap_dependence_ICTEFFIC_vs_ICTHOME.png`
+- `shap_dependence_ICTEFFIC_vs_ICTSCH.png`
+- `shap_dependence_ICTEFFIC_vs_ICTSUBJ.png`
+- `shap_dependence_ICTEFFIC_vs_MATHEFF.png`
+- `shap_dependence_ICTHOME_vs_ICTSCH.png`
+- `shap_dependence_ICTRES_vs_HOMEPOS.png`
+- `shap_dependence_ICTRES_vs_ICTEFFIC.png`
+- `shap_dependence_ICTRES_vs_ICTHOME.png`
+- `shap_dependence_ICTRES_vs_ICTSCH.png`
+- `shap_dependence_ICTRES_vs_ICTSUBJ.png`
+- `shap_dependence_ICTRES_vs_MATHEFF.png`
+- `shap_dependence_ICTSUBJ_vs_HOMEPOS.png`
+- `shap_dependence_ICTSUBJ_vs_ICTHOME.png`
+- `shap_dependence_ICTSUBJ_vs_ICTSCH.png`
+- `shap_dependence_ICTSUBJ_vs_MATHEFF.png`
