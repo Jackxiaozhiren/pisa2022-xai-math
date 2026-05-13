@@ -1,0 +1,147 @@
+{
+  "project_title": "Explainable Machine Learning for Predicting Mathematics Literacy and Low-Performing Students: Evidence from PISA 2022",
+  "target_journal": "Education and Information Technologies",
+  "paths": {
+    "raw_dir": "data/raw",
+    "interim_dir": "data/interim",
+    "processed_dir": "data/processed",
+    "figures_dir": "reports/figures",
+    "tables_dir": "reports/tables"
+  },
+  "files": {
+    "student_patterns": [
+      "CY08MSP_STU_QQQ.*",
+      "*STU*QQQ*.*",
+      "*student*questionnaire*.*"
+    ],
+    "school_patterns": [
+      "CY08MSP_SCH_QQQ.*",
+      "*SCH*QQQ*.*",
+      "*school*questionnaire*.*"
+    ]
+  },
+  "sample": {
+    "countries": [],
+    "max_rows_for_development": null,
+    "random_state": 20260510
+  },
+  "pisa": {
+    "student_id": "CNTSTUID",
+    "school_id": "CNTSCHID",
+    "country": "CNT",
+    "student_weight": "W_FSTUWT",
+    "replicate_weight_prefix": "W_FSTURWT",
+    "replicate_weight_count": 80,
+    "math_pv_prefix": "PV",
+    "math_pv_suffix": "MATH",
+    "math_pv_count": 10,
+    "low_performer_threshold": 420.07
+  },
+  "features": {
+    "student": [
+      "ST004D01T",
+      "GRADE",
+      "AGE",
+      "ESCS",
+      "IMMIG",
+      "HISEI",
+      "PAREDINT",
+      "HOMEPOS",
+      "ANXMAT",
+      "MATHEFF",
+      "MATHEF21",
+      "MATHPERS",
+      "FAMCON",
+      "BELONG",
+      "BULLIED",
+      "FEELSAFE",
+      "SCHRISK"
+    ],
+    "family": [
+      "PAREDINT",
+      "HISEI",
+      "HOMEPOS",
+      "FAMSUP",
+      "PQSCHOOL",
+      "PASCHPOL"
+    ],
+    "school": [
+      "DISCLIM",
+      "TEACHSUP",
+      "COGACRCO",
+      "COGACMCO",
+      "PERFEED",
+      "STUBEHA",
+      "TEACHBEHA",
+      "EDUSHORT",
+      "STAFFSHORT"
+    ],
+    "digital": [
+      "ICTRES",
+      "ICTHOME",
+      "ICTSCH",
+      "ICTEFFIC",
+      "ICTINFO",
+      "ICTDISTR",
+      "ICTSUBJ",
+      "LEARNRES",
+      "DISTICT",
+      "STUDYHMW"
+    ]
+  },
+  "models": {
+    "test_size": 0.2,
+    "cv_folds": 5,
+    "classification_threshold": 0.5,
+    "main_missingness_max": 0.5,
+    "extreme_missingness_min": 0.8,
+    "explanation_max_rows": 5000,
+    "permutation_max_rows": 10000,
+    "robustness_max_rows": 120000,
+    "enabled_optional_models": [
+      "lightgbm",
+      "xgboost"
+    ]
+  },
+  "robustness": {
+    "oecd_countries": [
+      "Australia",
+      "Austria",
+      "Belgium",
+      "Canada",
+      "Chile",
+      "Colombia",
+      "Costa Rica",
+      "Czech Republic",
+      "Denmark",
+      "Estonia",
+      "Finland",
+      "France",
+      "Germany",
+      "Greece",
+      "Hungary",
+      "Iceland",
+      "Ireland",
+      "Israel",
+      "Italy",
+      "Japan",
+      "Korea",
+      "Latvia",
+      "Lithuania",
+      "Mexico",
+      "Netherlands",
+      "New Zealand",
+      "Norway",
+      "Poland",
+      "Portugal",
+      "Slovak Republic",
+      "Slovenia",
+      "Spain",
+      "Sweden",
+      "Switzerland",
+      "Türkiye",
+      "United Kingdom",
+      "United States"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+key,source,local_file,bytes,md5,download_date,status
+student_questionnaire_zip,https://webfs.oecd.org/pisa2022/STU_QQQ_SPSS.zip,data/raw/STU_QQQ_SPSS.zip,682364259,4d218a329d5fbfc321e849568ffe8d7d,2026-05-10,downloaded
+student_questionnaire_sav,extracted from STU_QQQ_SPSS.zip,data/raw/CY08MSP_STU_QQQ.SAV,2096666903,382e8ee5816077d100bc9be9cd3dbce1,2026-05-10,downloaded
+school_questionnaire_zip,https://webfs.oecd.org/pisa2022/SCH_QQQ_SPSS.zip,data/raw/SCH_QQQ_SPSS.zip,6228625,db059ef65e4b6f67b361ce34f3053e01,2026-05-10,downloaded
+school_questionnaire_sav,extracted from SCH_QQQ_SPSS.zip,data/raw/CY08MSP_SCH_QQQ.SAV,19704342,3bd83a139173b3237ac6da6a4f31a51c,2026-05-10,downloaded
+codebook,https://webfs.oecd.org/pisa2022/CY08MSP_CODEBOOK_27thJune24.xlsx,docs/sources/pisa/CY08MSP_CODEBOOK_27thJune24.xlsx,3880763,ac4c7af365f7de795e268e6d09b5648b,2026-05-10,downloaded
+data_files_index,https://webfs.oecd.org/pisa2022/index.html,docs/sources/pisa/html/pisa_2022_data_files_index.html,35764,0e15f3c552ca7217a27470901bf4b868,2026-05-10,downloaded
+technical_report,https://www.oecd.org/content/dam/oecd/en/publications/reports/2024/03/pisa-2022-technical-report_599753f0/01820d6d-en.pdf,docs/sources/pisa/reports/pisa_2022_technical_report_01820d6d-en.pdf,9185880,9a32f615ad9013706a72d7f0cca7aaa9,2026-05-10,downloaded
+results_volume_i,https://www.oecd.org/content/dam/oecd/en/publications/reports/2023/12/pisa-2022-results-volume-i_76772a36/53f23881-en.pdf,docs/sources/pisa/reports/pisa_2022_results_volume_i_53f23881-en.pdf,24433470,ccc03ee2a7135258d0f68c6a2aaf6f4c,2026-05-10,downloaded
+results_volume_ii,https://www.oecd.org/content/dam/oecd/en/publications/reports/2023/12/pisa-2022-results-volume-ii_222a5ef6/a97db61c-en.pdf,docs/sources/pisa/reports/pisa_2022_results_volume_ii_a97db61c-en.pdf,21058535,da064262ce54129c66155e60595541c4,2026-05-10,downloaded
+results_volume_v,https://www.oecd.org/content/dam/oecd/en/publications/reports/2024/11/pisa-2022-results-volume-v_c2e5f9fb/c2e44201-en.pdf,docs/sources/pisa/reports/pisa_2022_results_volume_v_c2e44201-en.pdf,10653288,656833cc1822560dbb37c9a3336a8ff2,2026-05-10,downloaded

@@ -1,0 +1,40 @@
+feature,construct,configured_group,source,available_in_processed,missing_rate,decision
+ST004D01T,gender,student,student questionnaire,True,0.00012871816262154906,main_model
+GRADE,grade placement,student,student questionnaire,True,0.0398341979717928,main_model
+AGE,age,student,student questionnaire,True,0.0,main_model
+ESCS,"economic, social, and cultural status",student,student questionnaire,True,0.04149612867905837,main_model
+IMMIG,immigrant background,student,student questionnaire,True,0.07283003988633698,main_model
+HISEI,parental occupational status,student,student questionnaire,True,0.11868629265622149,main_model
+PAREDINT,parental education,student,student questionnaire,True,0.048384994395057224,main_model
+HOMEPOS,home possessions,student,student questionnaire,True,0.025629578456164134,main_model
+ANXMAT,mathematics anxiety,student,student questionnaire,True,0.22477124012617639,main_model
+MATHEFF,mathematics self-efficacy,student,student questionnaire,True,0.23500189003884356,main_model
+MATHEF21,mathematics self-efficacy,student,student questionnaire,True,0.20582523006334888,main_model
+MATHPERS,mathematics persistence,student,student questionnaire,True,0.18107875596339842,main_model
+FAMCON,family connection,student,student questionnaire,True,0.467903555879976,main_model
+BELONG,school belonging,student,student questionnaire,True,0.08538576344534529,main_model
+BULLIED,bullying exposure,student,student questionnaire,True,0.07456366172215126,main_model
+FEELSAFE,feeling safe at school,student,student questionnaire,True,0.15732292291248468,main_model
+SCHRISK,school risk climate,student,student questionnaire,True,0.23809438462942203,main_model
+FAMSUP,family support,family,student questionnaire,True,0.2291590630621236,main_model
+PQSCHOOL,parent-school relationship,family,student questionnaire,True,0.8529093563440131,excluded_extreme_missingness
+PASCHPOL,parental view of school policy,family,student questionnaire,True,0.8536718892567585,excluded_extreme_missingness
+DISCLIM,disciplinary climate,school,student questionnaire,True,0.11553840037540082,main_model
+TEACHSUP,teacher support,school,student questionnaire,True,0.15644144790010167,main_model
+COGACRCO,cognitive activation,school,student questionnaire,True,0.14722099116243906,main_model
+COGACMCO,cognitive activation,school,student questionnaire,True,0.19005806981412446,main_model
+PERFEED,perceived feedback,school,not found in raw questionnaire files,False,,unavailable
+STUBEHA,student behavior hindering learning,school,school questionnaire,True,0.17627382100680414,main_model
+TEACHBEHA,teacher behavior hindering learning,school,school questionnaire,True,0.09914231340754451,main_model
+EDUSHORT,educational material shortage,school,school questionnaire,True,0.10807274694335098,main_model
+STAFFSHORT,staff shortage,school,school questionnaire,True,0.21531778722073047,main_model
+ICTRES,ICT resources,digital,student questionnaire,True,0.4283300529210876,main_model
+ICTHOME,ICT availability or use at home,digital,student questionnaire,True,0.4597405432884069,main_model
+ICTSCH,ICT availability or use at school,digital,student questionnaire,True,0.43501688000208555,main_model
+ICTEFFIC,ICT self-efficacy,digital,student questionnaire,True,0.4924235511874658,main_model
+ICTINFO,ICT information behavior,digital,student questionnaire,True,0.48091223702390573,main_model
+ICTDISTR,digital distraction,digital,student questionnaire,True,0.567826324982403,extended_or_robustness_only
+ICTSUBJ,subject-related ICT use,digital,student questionnaire,True,0.47036712375192263,main_model
+LEARNRES,learning resources,digital,not found in raw questionnaire files,False,,unavailable
+DISTICT,distance-learning ICT,digital,not found in raw questionnaire files,False,,unavailable
+STUDYHMW,homework or study time,digital,student questionnaire,True,0.06260753669282307,main_model

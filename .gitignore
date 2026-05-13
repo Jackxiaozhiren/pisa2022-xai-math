@@ -1,0 +1,46 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Never commit OECD raw data or local derived row-level/model artifacts.
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+*.sav
+*.SAV
+*.sas7bdat
+*.zip
+*.joblib
+holdout_predictions.csv
+
+# Local build/proof artifacts.
+manuscript/build/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.xdv
+*.tmp
+
+# Local/editor files.
+.env
+.env.*
+*.swp
+data/raw/
+*.SAV
+*.sas7bdat
+*.zip
+*.joblib
+holdout_predictions.csv
+.venv/
+__pycache__/
+*.pyc

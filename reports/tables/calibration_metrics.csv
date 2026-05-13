@@ -1,0 +1,2 @@
+brier,mean_predicted_probability,observed_low_performer_rate,calibration_intercept,calibration_slope,expected_calibration_error
+0.13395120085213202,0.5384594288601525,0.5394496031935678,-0.0008505075240642836,1.0624798483347424,0.011297644354347531

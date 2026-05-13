@@ -1,0 +1,5 @@
+model,artifact_type,path
+classification_lightgbm,shap_summary,/Users/jackson/论文/pisa2022-xai-math/workspace/reports/figures/classification_lightgbm_shap_summary.png
+classification_lightgbm,permutation_importance,/Users/jackson/论文/pisa2022-xai-math/workspace/reports/tables/classification_lightgbm_permutation_importance.csv
+regression_lightgbm,shap_summary,/Users/jackson/论文/pisa2022-xai-math/workspace/reports/figures/regression_lightgbm_shap_summary.png
+regression_lightgbm,permutation_importance,/Users/jackson/论文/pisa2022-xai-math/workspace/reports/tables/regression_lightgbm_permutation_importance.csv
