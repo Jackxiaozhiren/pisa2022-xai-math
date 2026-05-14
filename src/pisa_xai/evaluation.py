@@ -198,3 +198,91 @@ def threshold_sensitivity(y_true, y_score, sample_weight: Optional[object] = Non
             }
         )
     return pd.DataFrame(rows)
+
+
+def fairness_metrics(
+    y_true: "np.ndarray",
+    y_pred: "np.ndarray",
+    group_values: "np.ndarray",
+    groups: Optional[list] = None,
+) -> "pd.DataFrame":
+    """Compute group fairness metrics.
+
+    Parameters
+    ----------
+    y_true : array-like
+        True binary labels.
+    y_pred : array-like
+        Predicted binary labels (thresholded).
+    group_values : array-like
+        Group membership values (e.g., gender, immigrant status).
+    groups : list, optional
+        Subset of group values to evaluate. Uses all unique values if None.
+
+    Returns
+    -------
+    pd.DataFrame with columns: group, n, prevalence, TPR, FPR,
+    selection_rate, dp_diff, eo_diff.
+    """
+    import numpy as np
+    import pandas as pd
+
+    require_package("numpy", "pip install -r requirements.txt")
+
+    y_true = np.asarray(y_true, dtype=int)
+    y_pred = np.asarray(y_pred, dtype=int)
+    group_values = np.asarray(group_values)
+
+    if groups is None:
+        groups = sorted(set(group_values))
+
+    rows = []
+    baseline_tpr = None
+    baseline_fpr = None
+    baseline_sel = None
+
+    for i, g in enumerate(groups):
+        mask = group_values == g
+        n = mask.sum()
+        if n == 0:
+            continue
+
+        yt = y_true[mask]
+        yp = y_pred[mask]
+
+        tp = ((yt == 1) & (yp == 1)).sum()
+        tn = ((yt == 0) & (yp == 0)).sum()
+        fp = ((yt == 0) & (yp == 1)).sum()
+        fn = ((yt == 1) & (yp == 0)).sum()
+
+        tpr = tp / (tp + fn) if (tp + fn) > 0 else float("nan")
+        fpr = fp / (fp + tn) if (fp + tn) > 0 else float("nan")
+        sel_rate = yp.mean()
+
+        row = {
+            "group": str(g),
+            "n": int(n),
+            "prevalence": float(yt.mean()),
+            "TPR": float(tpr),
+            "FPR": float(fpr),
+            "selection_rate": float(sel_rate),
+        }
+        rows.append(row)
+
+        if i == 0:
+            baseline_tpr = tpr
+            baseline_fpr = fpr
+            baseline_sel = sel_rate
+
+    # Compute differences from baseline (first group)
+    for i, row in enumerate(rows):
+        if i == 0:
+            row["dp_diff"] = 0.0
+            row["eo_diff"] = 0.0
+        else:
+            row["dp_diff"] = float(row["selection_rate"] - baseline_sel)
+            row["eo_diff"] = float(
+                max(abs(row["TPR"] - baseline_tpr), abs(row["FPR"] - baseline_fpr))
+            )
+
+    return pd.DataFrame(rows)
