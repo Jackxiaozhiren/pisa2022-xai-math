@@ -1,0 +1,11 @@
+group_a,group_b,n_common_features,spearman_r,p_value,dimension
+Q1 (low),Q2,33,0.8967,0.0,ESCS
+Q1 (low),Q3,33,0.8509,0.0,ESCS
+Q1 (low),Q4,33,0.8112,0.0,ESCS
+Q1 (low),Q5 (high),33,0.7152,3e-06,ESCS
+Q2,Q3,33,0.9873,0.0,ESCS
+Q2,Q4,33,0.9619,0.0,ESCS
+Q2,Q5 (high),33,0.8469,0.0,ESCS
+Q3,Q4,33,0.9843,0.0,ESCS
+Q3,Q5 (high),33,0.86,0.0,ESCS
+Q4,Q5 (high),33,0.8727,0.0,ESCS
