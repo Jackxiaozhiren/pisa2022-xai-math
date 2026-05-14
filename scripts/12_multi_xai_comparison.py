@@ -113,40 +113,69 @@ def main() -> int:
     print("Computing LIME explanations", flush=True)
     from lime.lime_tabular import LimeTabularExplainer
 
-    # Use first 1000 samples for LIME (it's slower)
     n_lime = min(500, n_sample)
-    x_lime = x_s.iloc[:n_lime]
+    x_lime = x_s.iloc[:n_lime].copy()
+    x_lime = x_lime.fillna(x_lime.median())  # handle NaN for LIME
 
-    # LIME needs raw feature names and training data
+    # Drop zero-variance columns (they break LIME's discretizer)
+    stds = x_lime.std()
+    nonzero_cols = stds[stds > 1e-8].index.tolist()
+    if len(nonzero_cols) < len(x_lime.columns):
+        dropped = set(x_lime.columns) - set(nonzero_cols)
+        print(f"  Dropping {len(dropped)} zero-variance columns for LIME: {dropped}", flush=True)
+        x_lime = x_lime[nonzero_cols]
+        lime_features = nonzero_cols
+    else:
+        lime_features = list(features)
+
     explainer_lime = LimeTabularExplainer(
         x_lime.values,
-        feature_names=list(features),
+        feature_names=lime_features,
         class_names=["Non-Low", "Low-Performer"],
         mode="classification",
-        discretize_continuous=True,
+        discretize_continuous=False,
     )
 
     # Wrapper for pipeline models
     def predict_fn(data):
+        df_in = pd.DataFrame(data, columns=lime_features)
         if hasattr(model, "named_steps"):
-            return model.predict_proba(pd.DataFrame(data, columns=features))
+            return model.predict_proba(df_in)
         return model.predict_proba(data)
 
-    lime_weights = np.zeros(len(features))
+    lime_weights = np.zeros(len(lime_features))
+    lime_successful = 0
     for i in range(min(100, n_lime)):
-        exp = explainer_lime.explain_instance(
-            x_lime.iloc[i].values, predict_fn, num_features=len(features), labels=(1,)
-        )
-        for feat_idx, weight in exp.as_list(label=1):
-            # LIME returns simplified feature indices; map back
-            if feat_idx < len(features):
-                lime_weights[feat_idx] += abs(weight)
+        try:
+            exp = explainer_lime.explain_instance(
+                x_lime.iloc[i].values, predict_fn, num_features=len(lime_features), labels=(1,)
+            )
+            for feat_idx, weight in exp.as_list(label=1):
+                try:
+                    idx = int(feat_idx)
+                except (ValueError, TypeError):
+                    # LIME may return feature names as strings
+                    continue
+                if 0 <= idx < len(lime_features):
+                    lime_weights[idx] += abs(weight)
+            lime_successful += 1
+        except Exception:
+            continue
 
-    lime_imp = pd.DataFrame({
-        "feature": features,
-        "lime_importance": lime_weights,
-    }).sort_values("lime_importance", ascending=False).reset_index(drop=True)
-    lime_imp["lime_rank"] = range(1, len(lime_imp) + 1)
+    if lime_successful > 0:
+        lime_imp = pd.DataFrame({
+            "feature": lime_features,
+            "lime_importance": lime_weights,
+        }).sort_values("lime_importance", ascending=False).reset_index(drop=True)
+        lime_imp["lime_rank"] = range(1, len(lime_imp) + 1)
+        print(f"  LIME explanations computed for {lime_successful}/{min(100, n_lime)} instances", flush=True)
+    else:
+        print("  LIME failed — using SHAP-only ranking; report as limitation", flush=True)
+        lime_imp = pd.DataFrame({
+            "feature": lime_features,
+            "lime_importance": [0.0] * len(lime_features),
+            "lime_rank": [len(lime_features) + 1] * len(lime_features),
+        })
 
     # ── 4. Merge and compare ──────────────────────────────────────
     merged = shap_imp[["feature", "shap_rank"]].merge(
