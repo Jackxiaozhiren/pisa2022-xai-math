@@ -274,13 +274,20 @@ AI-assisted tools (including large language models and code-generation assistant
 - Table 7: Calibration diagnostics, `reports/tables/calibration_metrics.csv` and `reports/tables/calibration_bins.csv`.
 - Table 8: Subgroup holdout metrics, `reports/tables/subgroup_holdout_metrics.csv`.
 - Table 9: Country-context robustness, `reports/tables/oecd_holdout_metrics.csv`, `reports/tables/country_fixed_effects_sensitivity.csv`, and `reports/tables/country_group_holdout_metrics.csv`.
-- Table 10: Hyperparameter tuning results, `reports/tables/hyperparameter_tuning.csv`.
-- Figure 1: Conceptual framework — Ecological Systems and Digital Divide integration, `reports/figures/conceptual_framework.png`.
+- Table 10: Hyperparameter tuning results, `reports/tables/hyperparameter_tuning_regression.csv` and `reports/tables/hyperparameter_tuning_classification.csv`.
+- Table 11: Counterfactual feature importance, `reports/tables/counterfactual_aggregate.csv`.
+- Table 12: Counterfactual magnitude, `reports/tables/counterfactual_magnitude.csv`.
+- Table 13: Digital Poverty Index by quintile, `reports/tables/digital_poverty_index.csv`.
+- Figure 1: Conceptual framework, `reports/figures/conceptual_framework.png`.
 - Figure 2: Methodology flowchart, `reports/figures/methodology_flowchart.png`.
 - Figure 3: Classification SHAP summary, `reports/figures/classification_lightgbm_shap_summary.png`.
 - Figure 4: Regression SHAP summary, `reports/figures/regression_lightgbm_shap_summary.png`.
-- Figure 5: SHAP dependence plots for key ICT interaction effects, `reports/figures/shap_dependence_ict.png`.
-- Figure 6: Subgroup performance comparison (forest plot), `reports/figures/subgroup_performance.png`.
-- Figure 7: Calibration curves for classification models, `reports/figures/calibration_curves.png`.
-- Figure 8: Country-level heterogeneity visualization, `reports/figures/country_heterogeneity.png`.
-- Figure 9: Digital-feature permutation importance, `reports/figures/digital_feature_importance.png`.
+- Figure 5: Calibration curves, `reports/figures/calibration_curves.png`.
+- Figure 6: Country heterogeneity, `reports/figures/country_heterogeneity.png`.
+- Figure 7: Digital-feature permutation importance, `reports/figures/digital_feature_importance.png`.
+- Figure 8: SHAP dependence plots (ICT interactions), `reports/figures/shap_dependence_*.png`.
+- Figure 9: Counterfactual feature importance, `reports/figures/counterfactual_importance.png`.
+- Figure 10: Counterfactual magnitude, `reports/figures/counterfactual_magnitude.png`.
+- Figure 11: Counterfactual reachability by ESCS, `reports/figures/counterfactual_reachability_escs.png`.
+- Figure 12: Digital Poverty Index, `reports/figures/digital_poverty_index.png`.
+- Figure 13: UMAP projections, `reports/figures/umap_projections.png`.

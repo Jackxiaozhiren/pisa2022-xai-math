@@ -58,7 +58,7 @@ def compute_digital_poverty_index(df):
 
 
 def main() -> int:
-    require_package("umap-learn", "pip install umap-learn")
+    require_package("umap", "pip install umap-learn")
     require_package("matplotlib", "pip install -r requirements.txt")
     require_package("numpy", "pip install -r requirements.txt")
     import matplotlib.pyplot as plt
