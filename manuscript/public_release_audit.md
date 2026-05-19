@@ -63,7 +63,7 @@ Prepared local package:
 - `/Users/jackson/论文/pisa2022-xai-math/public_release/pisa2022-xai-math-public-release.zip`
 
 The package includes MIT license text, a public-release manifest, source code,
-configuration, tests, manuscript source, `19` public aggregate CSV tables, `3`
-figures, and source manifests. A release-boundary scan found no `.SAV`, `.zip`,
+configuration, tests, manuscript source, `19` public aggregate CSV tables, `30`
+figures (7 main manuscript, 6 supplementary, 17 SHAP dependence plots), and source manifests. A release-boundary scan found no `.SAV`, `.zip`,
 `.joblib`, `holdout_predictions.csv`, `.venv`, old proof-only class directory,
 or manuscript build directory in the prepared package.

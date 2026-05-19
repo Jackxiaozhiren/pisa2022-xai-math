@@ -15,9 +15,13 @@ This file classifies generated result artifacts for submission packaging. It kee
 
 ## Main Manuscript Figures
 
-- `reports/figures/classification_lightgbm_shap_summary.png` - Figure 1, low-performer classification SHAP summary.
-- `reports/figures/regression_lightgbm_shap_summary.png` - Figure 2, mathematics-score regression SHAP summary.
-- `reports/figures/digital_feature_importance.png` - Figure 3, digital-feature permutation importance.
+- `reports/figures/conceptual_framework.png` - Figure 1, conceptual framework integrating ecological systems and digital divide theories.
+- `reports/figures/methodology_flowchart.png` - Figure 2, methodology flowchart summarizing the analytical pipeline.
+- `reports/figures/classification_lightgbm_shap_summary.png` - Figure 3, low-performer classification SHAP summary.
+- `reports/figures/regression_lightgbm_shap_summary.png` - Figure 4, mathematics-score regression SHAP summary.
+- `reports/figures/calibration_curves.png` - Figure 5, calibration curves for the best classification model.
+- `reports/figures/country_heterogeneity.png` - Figure 6, country heterogeneity visualization.
+- `reports/figures/digital_feature_importance.png` - Figure 7, digital-feature permutation importance.
 
 ## Supplementary Tables
 

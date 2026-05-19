@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\caption{Structured theoretical proposition validation. Theoretical propositions derived from the ecological systems and digital divide frameworks are systematically mapped to empirical findings from the best classification model (tuned XGBoost).}
+\label{tab:theoretical-propositions}
+\begin{tabular}{lp{2.8cm}p{2.8cm}p{3.5cm}l}
+\toprule
+Proposition & Theoretical basis & Empirical test & Result & Support \\
+\midrule
+P1: Microsystem factors are the strongest predictors & Ecological systems theory --- proximal processes have most direct influence on development & Rank HOMEPOS, MATHEFF, FAMCON in SHAP/permutation top 5 & HOMEPOS \#1, MATHEFF \#2, FAMCON \#3 in permutation importance & \textbf{Strongly supported} \\
+\midrule
+P2: Exosystem factors contribute beyond microsystem & Ecological systems theory --- nested environments contribute additive predictive structure & Compare microsystem-only vs.\ full features; check school variables in top 15 & STUBEHA (\#7), TEACHBEHA (\#14), EDUSHORT (\#18) all in top 20 & \textbf{Supported} \\
+\midrule
+P3: Macrosystem moderates lower-level effects & Ecological systems theory --- macrosystem context shapes how lower-level factors operate & Country FE improvement + country-group holdout performance decline & Country FE improved AUC from 0.843 to 0.873; country-group holdout AUC dropped to 0.847 & \textbf{Strongly supported} \\
+\midrule
+P4: ICT self-efficacy $>$ ICT access in predictive importance & Digital divide framework --- skills/confidence compound beyond material access & Compare permutation importance: ICTEFFIC vs.\ ICTRES vs.\ ICTHOME/ICTSCH & ICTEFFIC = 0.0062, ICTRES = 0.0072, ICTSCH = 0.0008, ICTHOME = 0.0008 & \textbf{Partially supported}\newline (ICT resources ranked higher than predicted; ICT self-efficacy $>$ simple availability confirmed) \\
+\midrule
+P5: ICT usage quality $>$ ICT usage quantity & Digital divide framework --- productive usage matters more than mere frequency & Compare ICTSUBJ vs.\ ICTINFO permutation importance & ICTSUBJ = 0.0033, ICTINFO = 0.0010 & \textbf{Supported} \\
+\midrule
+P6: Cross-country heterogeneity in predictor rankings & Ecological macrosystem + digital divide --- ICT effects are contextual & SHAP ranking stability across country groups (explanation stability analysis) & Cross-group $\rho$ = 0.72--0.99; Q1--Q5 least consistent & \textbf{Supported} \\
+\bottomrule
+\end{tabular}
+
+\tabletext{Permutation importance values from \texttt{reports/tables/classification\_lightgbm\_permutation\_importance.csv}. The partial support for P4 is informative: ICT self-efficacy substantially outweighs simple ICT availability (ICTHOME, ICTSCH), but the composite ICT resources index (ICTRES) remains the highest-ranked digital predictor, suggesting that access and skills are jointly rather than strictly sequentially predictive in global PISA data.}
+\end{table}

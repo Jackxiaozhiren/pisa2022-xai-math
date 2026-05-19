@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\centering
+\caption{Formal algorithmic fairness metrics for the best classification model (tuned XGBoost). Equalized Odds Difference, Demographic Parity Difference, and ABROCA (Absolute Between-ROC Area) are reported across gender, immigrant background, and ESCS quartile groups.}
+\label{tab:fairness-metrics}
+\begin{tabular}{lccc}
+\toprule
+Group & Equal. Odds Diff.\ (TPR) & Dem. Parity Diff. & ABROCA \\
+\midrule
+\multicolumn{4}{l}{\textbf{Gender (Female vs.\ Male)}} \\
+Female vs.\ Male & $<0.01$ & 0.02 & 0.008 \\
+\midrule
+\multicolumn{4}{l}{\textbf{Immigrant background (Native vs.\ Non-native)}} \\
+Native vs.\ Non-native & 0.04 & 0.03 & 0.015 \\
+\midrule
+\multicolumn{4}{l}{\textbf{ESCS quartile (Q4--privileged vs.\ Q1--unprivileged)}} \\
+Q4 vs.\ Q1 & 0.07 & -- & 0.023 \\
+\bottomrule
+\end{tabular}
+
+\tabletext{ABROCA values below 0.01 are generally considered negligible, 0.01--0.03 modest but noteworthy, and above 0.03 potentially actionable \citep{Gandara_2024_blackbox,Verger_2024_MADD}. By these benchmarks: gender disparities are negligible, immigrant-background disparities are modest, and SES-based disparities approach the actionable threshold. Intersectional analysis additionally showed that the lowest-ESCS, non-native-immigrant subgroup had AUC = 0.831 and F1 = 0.712, compared with AUC = 0.903 and F1 = 0.824 for the highest-ESCS, native subgroup.}
+\end{table}

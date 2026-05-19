@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering
+\caption{Multi-method XAI comparison: rank correlation between feature importance rankings from SHAP, permutation importance, and LIME for the best classification model (tuned XGBoost).}
+\label{tab:xai-comparison}
+\begin{tabular}{lccc}
+\toprule
+Comparison & Spearman's $\rho$ & Kendall's $\tau$ & $p$-value \\
+\midrule
+SHAP vs.\ Permutation importance & 0.831 & 0.663 & $<0.001$ \\
+SHAP vs.\ LIME & 0.004 & $-$0.004 & 0.982 \\
+Permutation importance vs.\ LIME & 0.024 & $-$0.008 & 0.896 \\
+\bottomrule
+\end{tabular}
+
+\tabletext{SHAP and permutation importance showed high inter-method consistency, with the top two predictors (HOMEPOS, MATHEFF) identically ranked. LIME-based rankings diverged substantially, likely reflecting LIME's reliance on local linear approximations.}
+\end{table}

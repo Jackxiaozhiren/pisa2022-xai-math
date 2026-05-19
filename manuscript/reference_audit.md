@@ -2,11 +2,9 @@
 
 ## Citation-Key Consistency
 
-Status: pass.
+Status: pass (2026-05-19 re-audit).
 
-All citation keys used in `manuscript/manuscript.md` are present in `manuscript/references.bib`.
-
-Keys checked:
+All 108 citation keys used in `manuscript/manuscript.md` are present in `manuscript/references.bib` (115 total BibTeX entries, 7 unused).
 
 - `Angelopoulos_Bates_2021`
 - `Breiman_2001`
@@ -39,7 +37,7 @@ Keys checked:
 
 Status: blocked by local Zotero Desktop API authorization, with limitation recorded.
 
-The Zotero helper checked `http://127.0.0.1:23119` after Zotero Desktop was opened. Zotero Connector responded successfully, but the local API returned `403 Forbidden`. The enable helper backed up and edited the Zotero preferences file, but the API still returned `403` in this session. Therefore, no Zotero export was used to overwrite `manuscript/references.bib`. The existing BibTeX remains the source of truth for this submission package until Zotero Desktop allows local API access or the library is exported manually from Zotero Desktop.
+The Zotero helper checked `http://127.0.0.1:23119` after Zotero Desktop was opened. Zotero Connector responded successfully, but the local API returned `403 Forbidden`. The enable helper backed up and edited the Zotero preferences file, but the API still returned `403` in this session. Therefore, no Zotero export was used to overwrite `manuscript/references.bib`. The existing BibTeX remains the source of truth for this submission package until Zotero Desktop allows local API access or the library is exported manually from Zotero Desktop. All 108 manuscript citation keys are verified present.
 
 ## Source Manifest Coverage
 

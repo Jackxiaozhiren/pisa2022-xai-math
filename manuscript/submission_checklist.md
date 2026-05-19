@@ -12,7 +12,7 @@
 - [x] Competing interests statement drafted.
 - [x] Author name, affiliation, ORCID ID, funding status, corresponding author, and single-author order confirmed by the author.
 - [ ] Institution-specific ethics/public-data exemption wording confirmed by the submitting institution or supervisor.
-- [x] Citation keys in `manuscript/manuscript.md` match `manuscript/references.bib`; Zotero local API status and reconciliation limitation are recorded in `manuscript/reference_audit.md`.
+- [x] Citation keys in `manuscript/manuscript.md` match `manuscript/references.bib` (108 cited, 114 total, 7 unused reserve entries).
 - [x] Local source manifest and Hugging Face/arXiv evidence audit completed for core XAI/PISA references in `manuscript/reference_audit.md`.
 
 ## Analysis Readiness
@@ -38,7 +38,9 @@
 - [x] Ethics statement: `manuscript/ethics_statement.md`.
 - [x] Competing interests: `manuscript/competing_interests.md`.
 - [x] Springer LaTeX source exported from the Markdown manuscript: `manuscript/springer_submission.tex`.
-- [x] Figure files exist, exceed 2,000 px width for current PNG outputs, and are captioned in the manuscript source.
+- [x] Figure files exist (30 total: 7 main, 6 supplementary, 17 SHAP dependence), exceed 2,000 px width, and are captioned in both manuscript source and LaTeX.
 - [x] Official Springer-template PDF rendered and visually checked for author metadata, caption placement, and figure readability. Status recorded in `manuscript/format_qa.md`.
 - [x] Pre-submission QA report created in `manuscript/pre_submission_qa_report.md`.
-- [x] Clean public-release package prepared for `Jackxiaozhiren/pisa2022-xai-math`.
+- [x] Supplementary materials LaTeX document created: `manuscript/supplementary_materials.tex` (11 pages, 5 supplementary tables, 6 supplementary figures, 6 SHAP dependence plots).
+- [x] Figures placed in correct body text sections (not backmatter): Figures 1-7 all at first citation point.
+- [x] Clean public-release package prepared for `Jackxiaozhiren/pisa2022-xai-math` (updated 2026-05-19).

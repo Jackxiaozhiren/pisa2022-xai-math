@@ -1,0 +1,135 @@
+\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{url}
+
+\begin{document}
+
+\title{Supplementary Information: Explainable Machine Learning for Predicting Mathematics Literacy and Low-Performing Students: Evidence from PISA 2022}
+
+\author*[1]{\fnm{Zhiren} \sur{Xiao}}\email{241734106@m.gduf.edu.cn}
+\affil*[1]{\orgname{Guangdong University of Finance}, \country{China}}
+
+\maketitle
+
+\section*{Supplementary Tables}
+
+\input{tables/table_S1_ale.tex}
+
+\clearpage
+
+\input{tables/table_S2_fairness.tex}
+
+\clearpage
+
+\input{tables/table_S3_literature_benchmark.tex}
+
+\clearpage
+
+\input{tables/table_S4_explanation_stability.tex}
+
+\clearpage
+
+\input{tables/table_S5_xai_ranking.tex}
+
+\clearpage
+
+\section*{Supplementary Figures}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{../reports/figures/multi_xai_comparison.png}
+\caption{Multi-method XAI comparison: feature importance rankings from SHAP, permutation importance, and LIME for the best classification model.}
+\label{fig:supp-xai-comparison}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{../reports/figures/explanation_stability.png}
+\caption{Explanation stability across ESCS quintile subgroups: SHAP-based feature importance ranking consistency.}
+\label{fig:supp-explanation-stability}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{../reports/figures/counterfactual_importance.png}
+\caption{Counterfactual feature importance: mean SHAP contribution for features appearing in counterfactual explanations.}
+\label{fig:supp-counterfactual-importance}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{../reports/figures/counterfactual_magnitude.png}
+\caption{Counterfactual magnitude analysis: required feature change to flip predictions.}
+\label{fig:supp-counterfactual-magnitude}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{../reports/figures/counterfactual_reachability_escs.png}
+\caption{Counterfactual reachability by ESCS quartile: the ``burden'' of required counterfactual change varies systematically by socioeconomic status.}
+\label{fig:supp-counterfactual-reachability}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{../reports/figures/digital_poverty_index.png}
+\caption{Digital Poverty Index by ESCS quintile: composite measure of ICT access disadvantage.}
+\label{fig:supp-digital-poverty}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{../reports/figures/umap_projections.png}
+\caption{UMAP projections of student profiles based on the 33 main-model features, colored by mathematics performance quintile and country income group.}
+\label{fig:supp-umap}
+\end{figure}
+
+\section*{SHAP Dependence Plots}
+
+The following figures show SHAP dependence plots for ICT interaction pairs, computed on a 5,000-row explanation sample using the best classification model (tuned XGBoost).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{../reports/figures/shap_dependence_ICTRES_vs_HOMEPOS.png}
+\caption{SHAP dependence: ICT resources (ICTRES) vs.\ home possessions (HOMEPOS).}
+\label{fig:shap-dep-ictres-homepos}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{../reports/figures/shap_dependence_ICTRES_vs_ICTEFFIC.png}
+\caption{SHAP dependence: ICT resources (ICTRES) vs.\ ICT self-efficacy (ICTEFFIC).}
+\label{fig:shap-dep-ictres-icteffic}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{../reports/figures/shap_dependence_ICTEFFIC_vs_HOMEPOS.png}
+\caption{SHAP dependence: ICT self-efficacy (ICTEFFIC) vs.\ home possessions (HOMEPOS).}
+\label{fig:shap-dep-icteffic-homepos}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{../reports/figures/shap_dependence_ICTEFFIC_vs_MATHEFF.png}
+\caption{SHAP dependence: ICT self-efficacy (ICTEFFIC) vs.\ mathematics self-efficacy (MATHEFF).}
+\label{fig:shap-dep-icteffic-matheff}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{../reports/figures/shap_dependence_ICTRES_vs_MATHEFF.png}
+\caption{SHAP dependence: ICT resources (ICTRES) vs.\ mathematics self-efficacy (MATHEFF).}
+\label{fig:shap-dep-ictres-matheff}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{../reports/figures/shap_dependence_ICTSUBJ_vs_HOMEPOS.png}
+\caption{SHAP dependence: subject-related ICT use (ICTSUBJ) vs.\ home possessions (HOMEPOS).}
+\label{fig:shap-dep-ictsubj-homepos}
+\end{figure}
+
+\end{document}

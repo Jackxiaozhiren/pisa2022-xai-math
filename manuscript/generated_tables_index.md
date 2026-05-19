@@ -8,14 +8,23 @@
 - `classification_lightgbm_permutation_importance.csv`
 - `classification_threshold_sensitivity.csv`
 - `complete_case_sensitivity.csv`
+- `counterfactual_aggregate.csv`
+- `counterfactual_detail.csv`
+- `counterfactual_magnitude.csv`
+- `counterfactual_query_baselines.csv`
+- `counterfactual_reachability_by_escs.csv`
 - `country_fixed_effects_sensitivity.csv`
 - `country_group_holdout_metrics.csv`
 - `digital_feature_importance.csv`
+- `digital_poverty_index.csv`
 - `explanation_artifacts.csv`
+- `explanation_stability.csv`
+- `explanation_stability_detail.csv`
 - `holdout_predictions.csv`
 - `hyperparameter_tuning_classification.csv`
 - `hyperparameter_tuning_regression.csv`
 - `model_metrics.csv`
+- `multi_xai_comparison.csv`
 - `oecd_holdout_metrics.csv`
 - `regression_lightgbm_permutation_importance.csv`
 - `sample_descriptives_by_country.csv`
@@ -24,15 +33,22 @@
 - `subgroup_holdout_metrics.csv`
 - `variable_audit.csv`
 - `weighted_descriptive_se.csv`
+- `xai_ranking_consistency.csv`
 
 ## Figures
 
 - `calibration_curves.png`
 - `classification_lightgbm_shap_summary.png`
 - `conceptual_framework.png`
+- `counterfactual_importance.png`
+- `counterfactual_magnitude.png`
+- `counterfactual_reachability_escs.png`
 - `country_heterogeneity.png`
 - `digital_feature_importance.png`
+- `digital_poverty_index.png`
+- `explanation_stability.png`
 - `methodology_flowchart.png`
+- `multi_xai_comparison.png`
 - `regression_lightgbm_shap_summary.png`
 - `shap_dependence_ICTEFFIC_vs_HOMEPOS.png`
 - `shap_dependence_ICTEFFIC_vs_ICTHOME.png`
@@ -50,3 +66,4 @@
 - `shap_dependence_ICTSUBJ_vs_ICTHOME.png`
 - `shap_dependence_ICTSUBJ_vs_ICTSCH.png`
 - `shap_dependence_ICTSUBJ_vs_MATHEFF.png`
+- `umap_projections.png`

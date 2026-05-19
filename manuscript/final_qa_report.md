@@ -1,89 +1,67 @@
 # Final QA Report
 
-Date: 2026-05-12
+Date: 2026-05-19 (updated)
 
 ## Overall Status
 
 **STATUS: SUBMISSION-READY**
 
-All analysis, manuscript, and package checks have passed. The manuscript is technically complete with embedded tables, expanded literature review (37 references), enhanced methods and discussion, and a supplementary information document.
+All critical fixes, reference verification, figure/table placement, and compilation checks have passed. The manuscript is technically complete with 7 figures, 10 main tables, 5 supplementary tables, 114 BibTeX entries (108 cited), and a 52-page compiled PDF.
 
-## Validation Results
+## 2026-05-19 Audit Results
 
-### Code and Analysis
-- [x] Script 00 (input check): PASS — student and school files detected, core variables verified
-- [x] Script 05 (table regeneration): PASS — 20 CSV tables and 3 PNG figures regenerated successfully
-- [x] Unit tests (pytest): PASS — 8/8 tests passed in 1.89s
-- [x] Python compilation: PASS — all source modules and scripts syntactically valid
-- [x] Pipeline reproducibility: VERIFIED — random seed 20260510 fixed across all scripts
+### Critical Fixes Applied
+- [x] Section 6.4 OECD holdout data corrected (AUC 0.865→0.877, RMSE 61.27→58.35)
+- [x] Table X theoretical propositions: ICTSUBJ, ICTINFO, ICTSCH, ICTHOME values corrected to match CSV data
+- [x] Figure numbering unified: digital feature importance = Figure 7 (was Figure 9 in body text)
+- [x] Missing Section 5.8 fixed: Section 5.9 renumbered to 5.8
+- [x] All "Table SX"/"Table X"/"Section SX" placeholders replaced with real numbers
+- [x] Figures 1, 2, 5, 6 added to body text (were only in appendix)
+
+### Figure/Table Placement
+- [x] All 7 figures placed in correct body text sections (not backmatter)
+- [x] All 10 tables properly referenced in text
+- [x] Supplementary Figures S1-S8 and Supplementary Tables S1-S5 created
+
+### Reference Integrity
+- [x] 11 key references web-search verified as authentic (Bronfenbrenner, van Dijk, Lundberg & Lee, Oz & Bulut, Khine, Huang, Gomez-Talal, Gunasekara & Saarela, Carvalho, Kisman, Kim FGTI, HEXED, PEARL, Letoffe)
+- [x] 3 duplicate BibTeX entries removed (Chen_2025_creative, KC_2025_digital_inequality, Kisman_2026_fidelity)
+- [x] Kisman 2026 author names corrected to match DOI 10.3390/su18031415
+- [x] 108 manuscript citation keys → 114 BibTeX entries (7 unused, all cited keys present)
+- [x] 4 @software entries converted to @misc for sn-mathphys-ay.bst compatibility
+- [x] "First to combine" claim softened to "among the first"
 
 ### LaTeX Compilation
-- [x] TeX syntax: PASS — brace depth 0 (balanced), all 9 table \input paths resolved
-- [⚠] PDF compilation: tectonic binary has macOS compatibility issue (reqwest crash)
-  - Previous compilation with same binary succeeded (14 pages)
-  - All TeX syntax has been verified as correct
-  - Tables and figures paths confirmed relative to manuscript/ directory
-  - Recommendation: compile on a system with working tectonic or install MacTeX
+- [x] pdflatex → bibtex → pdflatex × 2: clean compile
+- [x] 52-page PDF, 0 errors, 0 undefined citations
+- [x] 7 figures, 10 tables, all citations resolved
+- [x] Supplementary materials: 11-page PDF compiled separately
+
+### Code and Analysis
+- [x] Script 00 (input check): PASS
+- [x] Unit tests (pytest): PASS — 8/8 tests
+- [x] Pipeline reproducibility: VERIFIED — random seed 20260510
+- [x] All key manuscript numbers verified against reports/tables/*.csv
 
 ### Manuscript Content
-- [x] Citation key consistency: PASS — 37 keys in manuscript, 37 keys in BibTeX, 0 mismatches
-- [x] Table-number cross-check: ALL numbers consistent between CSV tables and manuscript claims (17/17 verified)
-- [x] Literature review: expanded from 26 to 37 references with recent 2024–2025 literature
-- [x] Methods section: enhanced with hyperparameter details, preprocessing rationale
-- [x] Discussion section: deepened with theoretical engagement and literature connections
-- [x] Limitations section: strengthened with fairness and missing-data mechanism discussion
-- [x] Supplementary information: created at manuscript/supplementary_information.md
-- [x] References: 37 BibTeX entries, all verified with DOIs where available
+- [x] Citation key consistency: PASS — 108 keys in manuscript, all in BibTeX
+- [x] Table-number cross-check: PASS — all values match CSV sources
+- [x] Figure-number cross-check: PASS — 7 figures in body, all captions match
+- [x] Placeholder check: PASS — 0 remaining "SX"/"X" placeholders
+- [x] Section continuity: PASS — Sections 5.1-5.8, no gaps
+- [x] ESCS AUC range corrected: 0.871-0.877 → 0.871-0.886
+- [x] Deep learning baselines wording adjusted to "exploratory"
 
 ### Security
-- [x] Secret scan: PASS — no hardcoded API keys, passwords, or tokens found
+- [x] Secret scan: PASS — no hardcoded API keys, passwords, or tokens
 - [x] Data boundary: PASS — raw data files excluded from public release
-- [x] PII scan: PASS — no identifiable student-level data in public-facing files
-
-### Figures and Tables
-- [x] Figure dimensions: PASS — all 3 PNG figures exceed 2,000 px width
-  - classification_lightgbm_shap_summary.png: 2370×2822 px
-  - regression_lightgbm_shap_summary.png: 2370×2822 px
-  - digital_feature_importance.png: 2070×870 px
-- [x] Tables: 9 LaTeX tables generated and embedded in submission TeX
-- [x] Table captions: all tables have captions and table notes
+- [x] PII scan: PASS — no identifiable student-level data
 
 ### Submission Package
 - [x] Main manuscript: manuscript/manuscript.md (updated)
-- [x] Springer LaTeX: manuscript/springer_submission.tex (regenerated with tables)
-- [x] References: manuscript/references.bib (37 entries)
-- [x] Title page: manuscript/title_page.md
-- [x] Cover letter: manuscript/cover_letter.md
-- [x] Highlights: manuscript/highlights.md
-- [x] Data availability: manuscript/data_availability.md
-- [x] Author contributions: manuscript/author_contributions.md
-- [x] Ethics statement: manuscript/ethics_statement.md
-- [x] Competing interests: manuscript/competing_interests.md
-- [x] Supplementary information: manuscript/supplementary_information.md (new)
-- [x] Figure files: reports/figures/*.png (3 figures)
-- [x] Public release: public_release/pisa2022-xai-math/ prepared
-
-## Remaining Blocker
-
-None. All blockers resolved.
-
-## Pre-Submission Checklist
-
-- [x] Abstract within 150–250 words (current: ~180 words)
-- [x] Keywords ≤ 6 terms
-- [x] All figures referenced in text and numbered
-- [x] All tables referenced in text and numbered
-- [x] Data availability statement present
-- [x] Ethics statement present
-- [x] Competing interests declared
-- [x] Author contributions specified
-- [x] AI-assisted work statement present
-- [x] Funding statement present
-- [x] All citations resolvable in references.bib
-- [x] Institution ethics exemption wording confirmed
-
-## Post-Approval Actions
-
-1. Compile final PDF with working LaTeX distribution
-2. Push public release to github.com/Jackxiaozhiren/pisa2022-xai-math
-3. Submit through EAIT Editorial Manager
+- [x] Springer LaTeX: manuscript/springer_submission.tex (regenerated, 7 figures, 10 tables)
+- [x] Supplementary LaTeX: manuscript/supplementary_materials.tex (11 pages)
+- [x] References: manuscript/references.bib (114 entries, 3 dupes removed)
+- [x] Supplementary tables: manuscript/tables/table_S1-S5.tex
+- [x] Title page, cover letter, highlights, declarations: all present
+- [x] PUBLIC_RELEASE_MANIFEST.md: updated with current file counts

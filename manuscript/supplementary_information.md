@@ -60,29 +60,54 @@ The robustness sample (120,000 rows) used a separate stratified draw for the cou
 
 ## S2. Supplementary Tables
 
-### S2.1 Alternative Low-Performer Label Stability
+### Table S1: ALE Importance Summaries
 
-Each of the 10 plausible values (PV1MATH through PV10MATH) was used independently to define the low-performer label (threshold = 420.07). The low-performer rate range was 45.24%–45.54%, with a standard deviation of approximately 0.03 percentage points, confirming near-perfect label stability across plausible values.
+First-order Accumulated Local Effects (ALE) were computed on a 10,000-row explanation sample with 20 bins using the best classification model (tuned XGBoost). The ALE-based feature ranking showed substantial agreement with SHAP and permutation importance rankings (Spearman's $\rho$ = 0.76, $p$ < 0.001; Kendall's $\tau$ = 0.58, $p$ < 0.001). The top-ranked predictors by ALE---home possessions (HOMEPOS), mathematics self-efficacy (MATHEFF), and grade---were identical to the top three by permutation importance. ICT self-efficacy (ICTEFFIC) achieved a higher ALE importance rank than its SHAP importance rank, while ICT resources (ICTRES) showed the reverse pattern. See `manuscript/tables/table_S1_ale.tex`.
 
-### S2.2 Complete-Case Population Shift
+### Table S2: Formal Fairness Metrics
 
-Only 6.47% of students (39,708 of 613,744) had complete data on all 33 main-model features. The low-performer rate in the complete-case subset was 37.9%, compared with 45.5% in the full unweighted sample — a difference of 7.6 percentage points. This confirms non-random missingness: students with more complete questionnaire data tend to have higher mathematics achievement.
+Equalized Odds Difference, Demographic Parity Difference, and ABROCA (Absolute Between-ROC Area) were computed for the best classification model across gender, immigrant background, and ESCS quartile groups. ABROCA values: gender = 0.008 (negligible), immigrant background = 0.015 (modest), ESCS quartiles = 0.023 (approaching actionable threshold). Intersectional analysis: lowest-ESCS, non-native-immigrant subgroup AUC = 0.831, F1 = 0.712; highest-ESCS, native subgroup AUC = 0.903, F1 = 0.824. See `manuscript/tables/table_S2_fairness.tex`.
 
-### S2.3 Country-Level Descriptive Statistics
+### Table S3: Literature Benchmark
 
-The full sample_descriptives_by_country.csv file provides per-country/economy weighted mathematics means, weighted low-performer rates, unweighted low-performer rates, and sample sizes for all 80 participating countries/economies. Weighted low-performer rates range from approximately 7.6% (Singapore) to 93.6% (Dominican Republic), reflecting the substantial cross-national variation that motivates the country-context robustness checks.
+Structured comparison of the present study with published PISA-ML studies from 2024--2025, covering sample size, country scope, performance metrics, XAI methods, and fairness evaluation. See `manuscript/tables/table_S3_literature_benchmark.tex`.
+
+### Table S4: Explanation Stability Across ESCS Quintiles
+
+SHAP-based feature importance rankings were computed separately for each ESCS quintile subgroup, and pairwise Spearman's $\rho$ quantified ranking consistency. Cross-group consistency was high overall ($\rho$ = 0.72--0.99, all $p$ < 0.001), with Q2--Q3 showing near-perfect agreement ($\rho$ = 0.99). The lowest consistency was between Q1 and Q5 ($\rho$ = 0.72). Data source: `reports/tables/explanation_stability.csv`. See `manuscript/tables/table_S4_explanation_stability.tex`.
+
+### Table S5: Multi-Method XAI Ranking Comparison
+
+Feature importance rankings from SHAP, permutation importance, and LIME were compared using Spearman's $\rho$ and Kendall's $\tau$. SHAP and permutation importance showed high consistency ($\rho$ = 0.83, $\tau$ = 0.66), while LIME diverged substantially. Data source: `reports/tables/multi_xai_comparison.csv` and `reports/tables/xai_ranking_consistency.csv`. See `manuscript/tables/table_S5_xai_ranking.tex`.
 
 ---
 
 ## S3. Supplementary Figures
 
-The following supplementary figures are available in the analysis repository:
+### Main manuscript figures (also included in the submission TeX)
 
-| Figure | Description |
-|--------|-------------|
-| `reports/figures/classification_lightgbm_shap_summary.png` | Full SHAP beeswarm summary for the classification LightGBM model (2,370 × 2,822 px) |
-| `reports/figures/regression_lightgbm_shap_summary.png` | Full SHAP beeswarm summary for the regression LightGBM model (2,370 × 2,822 px) |
-| `reports/figures/digital_feature_importance.png` | Digital-feature permutation importance comparison (2,070 × 870 px) |
+| Figure | File | Description |
+|--------|------|-------------|
+| Figure 1 | `reports/figures/conceptual_framework.png` | Conceptual framework integrating ecological systems and digital divide theories |
+| Figure 2 | `reports/figures/methodology_flowchart.png` | Methodology flowchart |
+| Figure 3 | `reports/figures/classification_lightgbm_shap_summary.png` | Classification SHAP summary (2,370 × 2,822 px) |
+| Figure 4 | `reports/figures/regression_lightgbm_shap_summary.png` | Regression SHAP summary (2,370 × 2,822 px) |
+| Figure 5 | `reports/figures/calibration_curves.png` | Calibration curves for best classification model |
+| Figure 6 | `reports/figures/country_heterogeneity.png` | Country heterogeneity visualization |
+| Figure 7 | `reports/figures/digital_feature_importance.png` | Digital-feature permutation importance (2,070 × 870 px) |
+
+### Supplementary figures (available in analysis repository)
+
+| Figure | File | Description |
+|--------|------|-------------|
+| Figure S1 | `reports/figures/shap_dependence_*.png` | SHAP dependence plots for ICT interaction pairs (20 plots) |
+| Figure S2 | `reports/figures/counterfactual_importance.png` | Counterfactual feature importance |
+| Figure S3 | `reports/figures/counterfactual_magnitude.png` | Counterfactual magnitude analysis |
+| Figure S4 | `reports/figures/counterfactual_reachability_escs.png` | Counterfactual reachability by ESCS |
+| Figure S5 | `reports/figures/digital_poverty_index.png` | Digital Poverty Index by quintile |
+| Figure S6 | `reports/figures/umap_projections.png` | UMAP projections of student profiles |
+| Figure S7 | `reports/figures/explanation_stability.png` | Explanation stability visualization |
+| Figure S8 | `reports/figures/multi_xai_comparison.png` | Multi-method XAI comparison |
 
 ---
 
@@ -92,7 +117,7 @@ All analyses were conducted in Python 3.11+ with pinned dependency versions spec
 
 1. Downloading the PISA 2022 student and school questionnaire SPSS files from the OECD PISA 2022 Database
 2. Placing them in `data/raw/`
-3. Running scripts 00–08 in sequence:
+3. Running scripts 00--22 in sequence:
    ```
    python scripts/00_check_inputs.py
    python scripts/01_prepare_data.py
@@ -103,6 +128,19 @@ All analyses were conducted in Python 3.11+ with pinned dependency versions spec
    python scripts/06_robustness_checks.py
    python scripts/07_export_latex.py
    python scripts/08_generate_latex_tables.py
+   python scripts/09_visualizations.py
+   python scripts/10_counterfactual_xai.py
+   python scripts/11_umap_dpi.py
+   python scripts/12_multi_xai_comparison.py
+   python scripts/13_explanation_stability.py
+   python scripts/14_ale_analysis.py
+   python scripts/15_fairness_evaluation.py
+   python scripts/16_deep_learning_baselines.py
+   python scripts/17_literature_benchmark.py
+   python scripts/19_pisa2018_temporal_analysis.py
+   python scripts/20_causal_ml_exploratory.py
+   python scripts/21_explanation_quality_axe.py
+   python scripts/22_fidelity_faithfulness.py
    ```
 4. Compiling the LaTeX manuscript with a Springer Nature-compatible LaTeX distribution
 
