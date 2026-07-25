@@ -1,16 +1,10 @@
-# PISA 2022 Explainable ML Mathematics Study
+# PISA 2022 Knowledge-Informed Expert System for Educational Assessment
 
-Target public repository: `Jackxiaozhiren/pisa2022-xai-math`.
+This repository implements the reproducible pipeline for the paper:
 
-This public-release package intentionally excludes OECD raw data, row-level
-prediction outputs, and fitted model artifacts. See `PUBLIC_RELEASE_MANIFEST.md`
-for the release boundary.
+**A Knowledge-Informed Expert System for Educational Assessment: Multi-Method Explainable AI with Formal Fairness Evaluation on Global-Scale Student Achievement Data**
 
-This repository implements the working pipeline for the paper:
-
-**Explainable Machine Learning for Predicting Mathematics Literacy and Low-Performing Students: Evidence from PISA 2022**
-
-The project is built for a SSCI/SCI applied paper. It treats machine learning as a tool for educational-statistical interpretation, not as a model leaderboard.
+Target journal: *Expert Systems with Applications* (ESWA).
 
 ## What Is Already Implemented
 
@@ -72,7 +66,7 @@ For the manuscript draft, keep `05_build_tables.py` last so the generated artifa
 - Classification outcome: low-performing student, default threshold `PV*MATH < 420.07`, matching the lower bound of PISA mathematics Level 2.
 - Weight: `W_FSTUWT`.
 - Replicate weights: `W_FSTURWT1` through `W_FSTURWT80`.
-- Main target journal: **Education and Information Technologies**.
+- Main target journal: **Expert Systems with Applications** (ESWA).
 
 ## Important Statistical Guardrails
 

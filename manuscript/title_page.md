@@ -2,7 +2,7 @@
 
 ## Title
 
-Explainable Machine Learning for Predicting Mathematics Literacy and Low-Performing Students: Evidence from PISA 2022
+A Knowledge-Informed Expert System for Educational Assessment: Multi-Method Explainable AI with Formal Fairness Evaluation on Global-Scale Student Achievement Data
 
 ## Authors
 

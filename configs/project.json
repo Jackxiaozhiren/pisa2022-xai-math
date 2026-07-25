@@ -1,6 +1,6 @@
 {
-  "project_title": "Explainable Machine Learning for Predicting Mathematics Literacy and Low-Performing Students: Evidence from PISA 2022",
-  "target_journal": "Education and Information Technologies",
+  "project_title": "A Knowledge-Informed Expert System for Educational Assessment: Multi-Method Explainable AI with Formal Fairness Evaluation on Global-Scale Student Achievement Data",
+  "target_journal": "Expert Systems with Applications (ESWA)",
   "paths": {
     "raw_dir": "data/raw",
     "interim_dir": "data/interim",
