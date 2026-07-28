@@ -1,0 +1,378 @@
+% ============================================================
+% KBS — Knowledge-Based Systems Submission
+% Elsevier elsarticle (numbered citations via elsarticle-num)
+% ============================================================
+
+\documentclass[review,12pt]{elsarticle}
+
+% --- Allow emergency line breaks in narrow abstract ---
+\usepackage{microtype}
+
+% --- Packages ---
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xurl}
+\usepackage{placeins}
+\usepackage{float}
+\usepackage{threeparttable}
+\usepackage[colorlinks,citecolor=blue,urlcolor=blue,linkcolor=blue]{hyperref}
+
+\raggedbottom
+
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{16pt plus 2pt minus 4pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\setlength{\dblfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{16pt plus 2pt minus 4pt}
+
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.50}
+\renewcommand{\textfraction}{0.10}
+\renewcommand{\floatpagefraction}{0.70}
+
+% --- Bibliography: Elsevier author-year (APA-compatible) ---
+\bibliographystyle{elsarticle-num}
+
+% --- Journal ---
+\journal{Knowledge-Based Systems}
+
+% ============================================================
+\begin{document}
+
+\begin{frontmatter}
+
+% --- Title ---
+\title{A Knowledge-Based System for Educational Assessment: Knowledge Engineering, Multi-Method Explainable AI, and Fairness-Aware Decision Support on PISA 2022 Data}
+
+% --- Author ---
+\author[aff1]{Zhiren Xiao\corref{cor1}}
+\cortext[cor1]{Corresponding author.}
+\ead{241734106@m.gduf.edu.cn}
+
+\address[aff1]{Guangdong University of Finance, Guangzhou, China}
+
+% --- Abstract (structured: Background--Methods--Results--Conclusion, ≤300 words) ---
+\begin{abstract}
+\setlength{\rightskip}{0pt plus 20pt}
+
+\textbf{Background:} Knowledge-based systems that integrate domain knowledge with machine learning remain rare in large-scale educational assessment, despite the field's need for reproducible, interpretable, and fairness-aware analytical pipelines.
+
+\textbf{Methods:} We develop a knowledge-based system that organizes 33 PISA~2022 predictors (613,744 students, 80 countries) across individual, interaction, institutional, and contextual levels, and classifies ICT variables by access, skills, and usage dimensions. Tree-based ensembles are trained with Bayesian hyperparameter optimization (Optuna, 50 trials), interpreted through SHAP, permutation importance, and Accumulated Local Effects (with LIME examined as a supplementary comparison), and evaluated against Equalized Odds, Demographic Parity, and ABROCA. The full pipeline is reproducible on a single workstation.
+
+\textbf{Results:} Tuned XGBoost achieves weighted RMSE~=~54.10 ($R^2 = 0.681$) and AUC~=~0.903 (Brier~=~0.126), a 23\% gain over linear baselines. Supplementary $k$-fold CV confirms negligible partition sensitivity (AUC~=~0.890~$\pm$~0.001). ICT resources and ICT self-efficacy consistently rank among the strongest predictors. SES disparities are the largest fairness concern (ABROCA~=~0.023), with pronounced disadvantage for low-SES immigrant-background students (AUC~=~0.831 vs.\ 0.903). Country-group holdout (AUC~=~0.847) confirms limited cross-context generalization.
+
+\textbf{Conclusion:} The proposed system offers a reproducible, fairness-aware template for knowledge-driven educational assessment; its modular architecture supports future ablation studies of the knowledge engineering layer without pipeline redesign.
+
+\end{abstract}
+
+% --- Keywords (3--5, \sep separated) ---
+\begin{keyword}
+explainable artificial intelligence \sep knowledge-based system \sep educational assessment \sep algorithmic fairness \sep machine learning \sep PISA
+\end{keyword}
+
+\end{frontmatter}
+
+% ============================================================
+% MAIN TEXT
+% ============================================================
+
+\section{Introduction}
+
+Knowledge-based systems that integrate domain knowledge with machine learning are increasingly needed to support human prediction and decision-making in complex, data-rich environments. Three knowledge engineering obligations arise in developing such systems: representing domain knowledge in a form the machine learning workflow can exploit, extracting and validating knowledge from fitted models, and encoding theoretical constructs into operational feature structures. Educational assessment at global scale---data spanning 80+ countries with heterogeneous systems, infrastructures, and socioeconomic conditions---imposes these obligations with particular force. The predictors of student achievement are not merely statistical variables but theoretically grounded constructs whose relationships embody domain knowledge from educational psychology and digital inequality research.
+
+Mathematics literacy is a core indicator of students' quantitative reasoning capacity. Understanding which factors predict mathematics achievement---and how digital learning technologies contribute---is a central concern for educational technology research \citep{OECD_2022_results_vol1}. PISA 2022, conducted in the aftermath of COVID-19-related school disruptions, places mathematics as the major assessment domain and provides detailed ICT-related questionnaire variables, offering a particularly informative setting \citep{OECD_2022_results_vol2,OECD_2022_database}.
+
+The relationship between digital technology and educational outcomes resists simple characterization. Recent research reveals an ``ICT paradox'': digital access and literacy positively predict achievement, whereas certain forms of advanced digital skills and unstructured technology use show negative associations \citep{Joshi_2025_digital_literacy}. This complexity calls for structured approaches that distinguish among access, skills, usage purposes, and learning outcomes rather than treating technology as a monolithic construct \citep{van_Dijk_2005,van_Dijk_2020}.
+
+In parallel, educational data mining increasingly applies machine learning to predict achievement \citep{Romero_Ventura_2020}. Tree-based ensembles capture nonlinear predictive structure that linear models may miss \citep{Breiman_2001}, while SHAP explanations reveal which variables fitted models rely upon \citep{Lundberg_Lee_2017}. However, developing a knowledge-based system for large-scale assessment data requires satisfying obligations beyond model comparison: proper knowledge representation conventions governing the use of plausible values, survey weights, and replicate weights \citep{OECD_2022_technical,Rutkowski_2010}; a knowledge extraction and validation framework that interprets model explanations as fitted-model patterns rather than causal evidence \citep{Rudin_2019,Molnar_2022}; and domain knowledge encoding that organizes digital-learning variables by theoretical structure rather than treating them as an undifferentiated list.
+
+We address these challenges by developing a knowledge-based ML system that integrates domain knowledge from educational research and digital inequality scholarship into a reproducible workflow. Drawing on ecological systems theory \citep{Bronfenbrenner_1979} and digital divide research \citep{van_Dijk_2020}, the system organizes 33 predictors across multiple ecological levels and classifies ICT variables by access, skills, and usage dimensions. Tree-based ensembles are trained with Bayesian hyperparameter optimization, interpreted through a multi-method knowledge extraction framework (SHAP, permutation importance, and Accumulated Local Effects, with LIME as a supplementary comparison), and evaluated against formal algorithmic fairness metrics---all from a single workstation with fixed random seeds and deterministic explanation samples.
+
+The present study addresses four research questions:
+
+\begin{enumerate}
+\item Which features are most predictive of PISA 2022 mathematics literacy when organized under a knowledge-based hierarchical feature framework?
+\item Do tree-based ensemble models with Bayesian hyperparameter optimization outperform traditional linear baselines by a clear margin on global-scale educational data?
+\item Does the multi-method knowledge extraction framework produce convergent evidence across explanation methods (SHAP, permutation importance, LIME, and Accumulated Local Effects), and do the resulting feature importance patterns align with domain knowledge?
+\item Are predictive performance and model explanations stable across demographic subgroups, socioeconomic strata, and country contexts?
+\end{enumerate}
+
+This work is positioned as a knowledge-based systems contribution rather than a conventional educational data mining study. The system encodes domain expertise from ecological systems theory and digital divide research into structured feature engineering; employs tree-based ensembles tuned via Bayesian optimization as its predictive core; integrates four complementary XAI methods with cross-method validation to ensure explanation reliability; and delivers fairness metrics and robustness benchmarks actionable for educational stakeholders. The full pipeline operates from a single workstation with fixed random seeds and deterministic explanation samples, satisfying the reproducibility standard for knowledge-driven analytical systems \citep{Breiman_2001,Romero_Ventura_2020}. Section~4.7 provides the full system architecture description. The term "knowledge extraction" in this paper refers to post-hoc explanation synthesis from fitted models, distinct from symbolic rule extraction but methodologically aligned with KBS's interest in making model-internal patterns externally interpretable \citep{CaroMartinez2024iSee}.
+
+\section{Knowledge Engineering Framework}
+
+The framework structures raw PISA variables into theoretically grounded feature groups through a systematic knowledge encoding process. Following the knowledge engineering paradigm---knowledge acquisition, knowledge representation, and knowledge validation---we first acquire domain knowledge from ecological systems theory and digital divide research, then represent it as a hierarchical feature organization supplemented by an ICT taxonomy, and finally validate the encoded knowledge through the testable predictions of Section~2.3. The framework functions as an organizational tool rather than a formal causal model, and the ML models remain nonparametric and predictive.
+
+\subsection{Framework description}
+
+Drawing on ecological systems theory \citep{Bronfenbrenner_1979,Bronfenbrenner_1994}, we organize 33 predictors across four nested hierarchical levels:
+
+\begin{itemize}
+\item \textbf{Individual level} --- student characteristics, family resources (home possessions, parental occupation), and daily interactions with teachers and peers; proximal factors shaping learning opportunities and motivational beliefs such as self-efficacy \citep{Eccles_Wigfield_2002}.
+\item \textbf{Interaction level} --- connections between settings: parent-school communication, alignment between home learning resources and school curriculum, and the association between family SES and school quality.
+\item \textbf{Institutional level} --- school-level factors (school climate, resource shortages, teacher and student behavioral climate) and community ICT infrastructure.
+\item \textbf{Contextual level} --- national education policies, digital infrastructure, and socioeconomic inequality; country identity serves as a proxy.
+\end{itemize}
+
+Grounded in digital inequality research \citep{van_Dijk_2005,van_Dijk_2020}, ICT-related PISA variables are classified into a three-level taxonomy: \textbf{access} (ICT resources at home, \texttt{ICTRES}; ICT availability at school, \texttt{ICTSCH}; home ICT availability, \texttt{ICTHOME}), \textbf{skills/con\-fidence} (ICT self-efficacy, \texttt{ICTEFFIC}), and \textbf{usage} (subject-related ICT use, \texttt{ICTSUBJ}; ICT information behavior, \texttt{ICTINFO}; study-related ICT use, \texttt{STUDYHMW}).
+
+This dual organization informs three design decisions: (1) feature coverage spanning all four hierarchical levels; (2) disaggregated ICT analysis by taxonomy level; and (3) context-sensitivity evaluation via country fixed-effects and country-group holdout checks. Figure~\ref{fig:conceptual-framework} provides a visual synthesis.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.72\textwidth,keepaspectratio]{conceptual_framework.pdf}
+\caption{Knowledge engineering framework: hierarchical feature organization (individual, interaction, institutional, and contextual levels) integrated with the ICT feature taxonomy (access, skills/confidence, and usage dimensions) for 33 PISA 2022 predictors across 80 countries}
+\label{fig:conceptual-framework}
+\end{figure}
+\FloatBarrier
+
+\subsection{Testable predictions}
+
+The framework yields six testable predictions, evaluated in Section~\ref{sec:discussion} (Table~\ref{tab:propositions}):
+
+\begin{description}
+\item[P1 --- Proximal dominance:] Individual-level features are the strongest predictors.
+\item[P2 --- Institutional contribution:] School-level features contribute predictive information beyond what individual and family characteristics alone provide.
+\item[P3 --- Contextual moderation:] Country identity moderates lower-level effects; models incorporating country information outperform those that do not.
+\item[P4 --- Skill--access gradient:] ICT self-efficacy carries greater predictive weight than ICT resource availability.
+\item[P5 --- Usage quality gradient:] Subject-related ICT use carries greater predictive weight than general ICT information behavior.
+\item[P6 --- Cross-context heterogeneity:] Feature importance rankings vary across country contexts.
+\end{description}
+
+These are statements about expected patterns in fitted-model behavior, not causal hypotheses.
+
+\subsection{Knowledge encoding protocol}
+
+The framework follows three knowledge engineering stages:
+
+\textbf{Knowledge acquisition.} Domain knowledge is acquired from two established theoretical sources: ecological systems theory \citep{Bronfenbrenner_1979,Bronfenbrenner_1994}, which situates student achievement within nested environmental layers (individual, interaction, institutional, contextual), and digital divide research \citep{van_Dijk_2005,van_Dijk_2020}, which distinguishes ICT access, skills, and usage as qualitatively distinct dimensions. These sources are operationalized to the PISA 2022 variable set through a structured mapping procedure documented in Supplementary Table~S6.
+
+\textbf{Knowledge representation.} The acquired knowledge is represented as a two-part structure: a four-level hierarchical feature organization (Section~2.1) and a three-level ICT taxonomy (Section~2.1). Each of the 33 predictors is assigned to one ecological level and---if ICT-related---to one taxonomy dimension. The representation is declarative (features carry theoretically grounded type labels) rather than procedural (no causal graph or inference rules are specified), consistent with the system's predictive rather than causal scope.
+
+\textbf{Knowledge validation.} The encoded knowledge is validated through six testable predictions (P1--P6, Section~2.3) that are evaluated against fitted-model behavior in Section~\ref{sec:discussion}. This structured knowledge validation protocol makes domain assumptions explicit and empirically falsifiable, a defining characteristic of knowledge-based systems \citep{Pham_2025_FAIREDU,Yang_2025_LLM_KBS}.\
+
+\section{Related Work}
+
+\subsection{Knowledge extraction and explanation in large-scale assessment}
+
+Gradient boosting models including XGBoost and LightGBM have become standard tools in educational data mining, capturing nonlinearities and interactions that linear baselines miss \citep{Chen_Guestrin_2016,Ke_2017,Hastie_Tibshirani_Friedman_2009}. Recent reviews identify insufficient attention to complex sampling designs and missing-data mechanisms \citep{Ersozlu_2024} and underexplored explainability and fairness \citep{Wang_2024_AIED_review}. A 2026 systematic review of 72 EDM studies confirmed SHAP as the dominant XAI method and identified interpretability-fairness integration as a critical underexplored area \citep{CAEAI_2026_review}; a parallel systematic literature mapping corroborated that interpretability is rarely treated as a core design objective \citep{Carvalho_2026_SLM}. Recent PISA-ML studies have applied these methods with SHAP interpretation to East Asian systems \citep{Huang_2024}, cross-national resilience analysis \citep{Cheung_2024_resilience}, Spanish students \citep{Gomez_Talal_2025}, U.S.\ data \citep{Zhu_2025_US_PISA}, and Latin American low-performer identification \citep{PISA_2022_XAI_low_performers,PISA_2022_XAI_resilience}; \mbox{\"Oz} and Bulut \citep{Oz_2025_stacking} demonstrated ensemble advantages on the full 80-country sample but included neither XAI nor fairness evaluation. A metaheuristic-optimized LightGBM system with SHAP analytics for student performance prediction \citep{Yildirim_2025_ESWA_LightGBM} and an EBM-based dropout prediction study documenting global and local explainability trade-offs \citep{Camargos_2025_EBM_dropout} confirm the trend toward interpretable ML architectures (Supplementary Table~S3 provides a structured comparison).
+
+SHAP and permutation importance are widely used to summarize predictor contributions \citep{Lundberg_Lee_2017,Molnar_2022}, and post-hoc explanation methods are increasingly preferred in educational applications \citep{Khosravi_2022}. Recent work extends SHAP-based explanation to model uncertainty quantification, demonstrating the method's flexibility across domains \citep{Cheng_2026_uncertainty_SHAP}. Within the Knowledge-Based Systems literature, Caro-Martinez et al.\ \citep{CaroMartinez2024iSee} proposed a case-based reasoning platform for designing explanation experiences, demonstrating how knowledge-based approaches can systematize XAI method selection---a concern shared by this study. Because different interpretability algorithms produce complementary but divergent rankings \citep{Niu_2025} and correlated predictors can distort marginal feature effect estimates \citep{Herbinger_2024_GADGET}, multi-method comparison is advisable.
+
+\subsection{Algorithmic fairness in predictive modeling}
+
+Predictive models can perpetuate inequities when fairness is not explicitly evaluated \citep{Baker_Hawn_2022,Kizilcec_Lee_2022}, and recent reviews recommend expanding fairness evaluations beyond gender and race to socioeconomic and intersectional subgroups \citep{Idowu_2024_debiasing}. Mirsch et al.\ \citep{Mirsch_2025_intersectional} demonstrated that intersectional fairness analysis reveals disparities invisible to single-axis evaluation, reinforcing the need for multi-dimensional subgroup assessment. Within recent KBS publications, Zhang et al.\ \citep{Zhang2025FairnessFeature} proposed a causal path approach to fairness-aware feature selection, Wang and Luo \citep{Wang_2024_latent_discrimination} introduced an object-relational causal inference method for detecting latent discrimination, and Pei \citep{Pei2025F3Fair} presented adaptive regularization for fair federated learning, reflecting the journal's growing emphasis on algorithmic fairness. In the educational domain, Pham et al.\ \citep{Pham_2025_FAIREDU} recently proposed fairness-enhancing methods for educational ML, while G\'andara et al.\ \citep{Gandara_2024_blackbox} found common bias-mitigation techniques often ineffective, pointing to transparent subgroup evaluation as a minimum requirement.
+
+\subsection{Research gap and present contribution}
+
+Five gaps remain, each addressed by this study: (1) most PISA-ML studies rely on single-country or regional samples---we use the full 80-country PISA 2022 sample with proper survey-weight and plausible-value conventions; (2) no prior study systematically compares multiple XAI methods within a single analytical framework---we compare SHAP, permutation importance, LIME, and ALE with rank correlation validation; (3) formal algorithmic fairness metrics are largely absent from PISA-ML studies---we implement Equalized Odds, Demographic Parity, and ABROCA \citep{Li_2025} with intersectional subgroup analysis; (4) ICT variables are typically treated as supplementary covariates---we make them central analytical targets within the knowledge engineering framework and ICT taxonomy of Section~2; and (5) no prior study has structurally validated domain-knowledge-derived predictions against fitted-model behavior---we evaluate six such predictions in Section~\ref{sec:discussion}.
+
+\section{Knowledge-Based System Architecture and Methodology}
+
+\subsection{Data and preprocessing}
+
+The system ingested public-use PISA 2022 student and school questionnaire data from the OECD PISA 2022 Database \citep{OECD_2022_database}. The processed analysis frame comprises 613,744 students from 80 countries and economies. Student and school questionnaires were merged by country and school identifier. Four school-level variables entered the model: student behavior hindering learning (\texttt{STUBEHA}), teacher behavior hindering learning (\texttt{TEACHBEHA}), educational material shortage (\texttt{EDUSHORT}), and staff shortage (\texttt{STAFFSHORT}). A complete code-to-description mapping is provided in Supplementary Table~S6. Figure~\ref{fig:methodology-flowchart} summarizes the full analytical pipeline.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.72\textwidth,keepaspectratio]{methodology_flowchart.pdf}
+\caption{Knowledge-based system architecture: from PISA 2022 public-use data through the five-layer pipeline---(1) knowledge acquisition (data ingestion and variable audit), (2) knowledge representation (hierarchical feature organization and ICT taxonomy), (3) inference engine (Bayesian HPO and ensemble training), (4) knowledge extraction (multi-method XAI with cross-method validation), and (5) decision support and fairness audit (fairness metrics, intersectional analysis, and eight robustness checks). All components operate on a single workstation with fixed random seeds.}
+\label{fig:methodology-flowchart}
+\end{figure}
+\FloatBarrier
+
+The weighted global mathematics mean was 424.29 (SE~=~0.72 using Balanced Repeated Replication [BRR] replicate weights and plausible-value pooling). The weighted low-performer rate based on plausible-value pooling was 53.30\% (SE~=~0.35), while the modeling label based on the row-wise plausible-value mean produced a weighted rate of 53.90\% (SE~=~0.35). These estimates distinguish population descriptive quantities from modeling outcomes.
+
+\subsection{Outcomes and feature set}
+
+The continuous outcome is mathematics literacy, operationalized as the row-wise mean of \texttt{PV1MATH} through \texttt{PV10MATH}. The binary outcome is low-performing student status, defined as mathematics performance below 420.07---the lower bound of PISA proficiency Level~2 \citep{NCES_2022_cut_scores}.
+
+A reproducible variable audit was conducted prior to modeling. Of 36 configured predictors available in the processed data, 33 were retained with missingness at or below 50\%. Two parent-school relationship variables, \texttt{PQSCHOOL} and \texttt{PASCHPOL}, were excluded because both exceeded 85\% missingness. Missing values were handled by median imputation for numeric variables and most-frequent imputation for categorical variables. Categorical variables were one-hot encoded with rare-category grouping. The same frozen feature set was used for both regression and classification tasks.
+
+\subsection{Model training and hyperparameter optimization}
+
+Traditional baselines comprised ridge regression, elastic net, and L2-regularized logistic regression. ML models included random forest, histogram gradient boosting, XGBoost, and LightGBM, all with a fixed random seed (20260510). Deep learning baselines were excluded because tree-based ensembles consistently outperform neural networks on tabular data with heterogeneous feature types \citep{Grinsztajn_2022_tree_vs_dl,Ersozlu_2024}. Intrinsically interpretable models (EBMs, GAMs) were not included as primary baselines; a preliminary benchmark confirming their competitiveness is reported in Section~\ref{sec:limitations}.
+
+Hyperparameters for XGBoost and LightGBM were tuned using Optuna (Bayesian optimization, 50 trials per model-task), minimizing RMSE (regression) and log-loss (classification) on a 15\% validation subset. Fifty trials was chosen based on preliminary convergence diagnostics showing diminishing returns beyond 40 trials; search space coverage was verified via optimization history logging. The full search space is documented in Supplementary Table~S7.
+
+A stacking ensemble combined random forest, LightGBM, and XGBoost as base learners with ridge or logistic regression as the meta-learner, using out-of-fold predictions from 5-fold cross-validation \citep{Gomez_Talal_2025}.
+
+The primary evaluation used a stratified 80/20 holdout. Bootstrap 95\% CIs from 1,000 resamples of holdout predictions confirmed narrow intervals (RMSE 54.10 [53.58, 54.66], AUC 0.903 [0.898, 0.907]). A supplementary 5-fold CV with default-parameter models yielded near-zero cross-fold variance (XGBoost AUC~=~0.890~$\pm$~0.001), confirming negligible partition sensitivity at this sample size. The full pipeline ran on a workstation (Apple M5, 12 cores, 16~GB unified memory) in approximately 12 hours.
+
+\subsection{Multi-method XAI framework}
+
+\textbf{SHAP.} TreeSHAP on a deterministic 5,000-row explanation sample; cross-model consistency (XGBoost vs.\ LightGBM, Spearman's~$\rho$~=~0.83) and near-perfect explanation fidelity (R\textsuperscript{2}~=~0.9999 between predictions and SHAP value reconstruction) support stability at this sample size. SHAP interaction values were computed for theoretically motivated feature pairs (ICT resources $\times$ home possessions, ICT self-efficacy $\times$ mathematics self-efficacy).
+
+\textbf{Permutation importance.} Deterministic 10,000-row sample with five repeats, using AUC (classification) and RMSE (regression) as scoring metrics.
+
+\textbf{ALE.} First-order ALE on a 10,000-row sample with 20 bins, with second-order ALE for key feature pairs. ALE is preferred over Partial Dependence when features are correlated \citep{Molnar_2022,Herbinger_2024_GADGET}.
+
+\textbf{LIME.} Local explanations on a 500-instance sample for the best classification model \citep{Ribeiro_2016}, included as a supplementary comparison given its known sensitivity to correlated features.
+
+\textbf{Cross-method validation.} Feature importance rankings from all methods were compared using Spearman's~$\rho$ and Kendall's~$\tau$ rank correlation, with explanation fidelity and faithfulness computed following Kı\c{s}man et al.\ \citep{Kisman_2026}.
+
+\subsection{Fairness evaluation}
+
+Formal fairness metrics were computed for the best classification model across three demographic dimensions: gender, immigrant background, and socioeconomic status as measured by the PISA Economic, Social and Cultural Status (ESCS) index quartile groups. The metrics included Equalized Odds Difference, Demographic Parity Difference, and ABROCA (Absolute Between-ROC Area) \citep{Li_2025}. Intersectional subgroup analysis further examined combined disparities, for instance low-SES students with non-native immigrant backgrounds.
+
+\subsection{Robustness evaluation}
+
+Eight robustness checks were implemented: (1) OECD-only holdout evaluation; (2) subgroup holdout by gender, immigrant background, and ESCS quintiles; (3) complete-case sensitivity analysis; (4) recomputation of low-performing status using each plausible value separately; (5) country fixed-effect comparison on a 120,000-row robustness sample; (6) country-group holdout (training on 64 countries, evaluation on 16);
+(7) explanation stability assessment across demographic subgroups using pairwise Spearman's~$\rho$; (8) temporal stability analysis comparing feature importance rankings from PISA 2022 against those from PISA 2018, using harmonized variable definitions and Spearman's~$\rho$ as the pre-specified stability metric.
+
+\subsection{Knowledge-based system architecture overview}
+
+The system adopts a five-layer knowledge-based system architecture aligned with classical KBS components:
+
+\begin{itemize}
+\item \textbf{Layer 1: Knowledge acquisition layer} --- validates and merges PISA public-use files, documenting variable provenance, missingness, and ecological-level assignment (Supplementary Table~S6); corresponds to the knowledge acquisition stage in the KBS knowledge engineering cycle.
+\item \textbf{Layer 2: Knowledge representation layer} --- applies the hierarchical feature organization and ICT taxonomy derived from ecological systems theory and digital divide research; corresponds to the knowledge representation stage, encoding domain expertise as structured feature type labels.
+\item \textbf{Layer 3: Inference engine} --- Bayesian hyperparameter optimization (Optuna, 50 trials), tree-based ensemble training (XGBoost, LightGBM, random forest), stacking, and stratified holdout evaluation; tuned XGBoost serves as the primary inference engine.
+\item \textbf{Layer 4: Knowledge extraction and explanation layer} --- SHAP, permutation importance, LIME, and ALE with cross-method validation (Spearman's~$\rho$, Kendall's~$\tau$); extracts and validates knowledge from fitted models.
+\item \textbf{Layer 5: Decision support and fairness audit layer} --- formal fairness metrics (Equalized Odds, Demographic Parity, ABROCA), intersectional analysis, and eight robustness checks; produces actionable decision-support output for educational stakeholders.
+\end{itemize}
+
+The pipeline deploys on a single workstation (Apple M5, see Section~4.3). All components are accessible through a public benchmark repository with fixed random seeds and deterministic explanation samples.
+
+The knowledge representation layer (Layer~2) encodes domain expertise through theoretically motivated feature selection and taxonomic classification. The hierarchical feature organization (Section~2.1) structures 33 predictors across four ecological levels; the ICT taxonomy (Section~2.1) disaggregates seven digital-learning variables by access, skills/confidence, and usage dimensions. Together with the structured proposition validation (P1--P6), these components form a knowledge-based architecture in which domain knowledge constrains and guides the ML workflow, from feature selection through interpretation, rather than treating the pipeline as a purely data-driven exercise.
+
+\subsection{Knowledge validation protocol}
+
+The six domain-knowledge-derived propositions (P1--P6, Section~2.3) constitute a knowledge validation protocol that makes domain assumptions explicit and empirically testable. Each proposition specifies: (1) the knowledge basis from which it is derived (ecological systems theory or ICT taxonomy); (2) the empirical test that operationalizes it (e.g., SHAP rank comparison for P4, country-group holdout for P3); (3) the expected pattern if the encoded knowledge is consistent with fitted-model behavior; and (4) a graded assessment of support (strongly supported, supported, or not supported). The protocol is evaluated in Section~\ref{sec:discussion} (Table~\ref{tab:propositions}).
+
+\section{Experimental Results}
+
+\input{kbs_results_body.tex}
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Knowledge extraction from fitted models}
+
+\textbf{Performance benchmark.}
+The system's global model performance exceeds single-country benchmarks reported for Australian data (R\textsuperscript{2}~=~0.42) \citep{Khine_2024} and approaches the Spain-only AUC~=~0.977 of G\'omez-Talal et al.\ \citep{Gomez_Talal_2025} on a more heterogeneous 80-country sample. Among studies using the full global PISA 2022 sample, this knowledge-based system is, to our knowledge, the first to combine multi-method explanation synthesis, formal fairness evaluation, and knowledge-based feature engineering in a single reproducible workflow.
+
+\textbf{Structured knowledge validation.} Table~\ref{tab:propositions} systematically maps domain-knowledge-derived predictions to empirical findings, specifying the expected pattern, the empirical test, the result, and the degree of support.
+
+\begin{table}[htp]
+\centering
+\caption{Structured validation of predictions against empirical results}
+\label{tab:propositions}
+\footnotesize
+\renewcommand{\arraystretch}{0.75}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{3.6cm}p{4.6cm}p{3.4cm}p{3.4cm}p{2.2cm}}
+\toprule
+\textbf{Proposition} & \textbf{Knowledge basis} & \textbf{Empirical test} & \textbf{Result} & \textbf{Support} \\
+\midrule
+P1: Individual-level features are strongest predictors & Hierarchical org.\ --- proximal factors have most direct influence & HOMEPOS, MATHEFF, FAMCON in SHAP/perm.\ top~5 & HOMEPOS \#1, MATHEFF \#2, FAMCON \#3 & \textbf{Strongly supported} \\
+P2: Institutional features contribute beyond individual level & Hierarchical org.\ --- nested levels contribute additive structure & School variables in top~20 & STUBEHA \#7, TEACHBEHA \#14, EDUSHORT \#18 & \textbf{Supported} \\
+P3: Contextual level moderates lower-level effects & Hierarchical org.\ --- context shapes how lower-level factors operate & Country FE improvement + country-group holdout decline & AUC 0.843$\to$0.873 with FE; AUC 0.847 for country-group holdout & \textbf{Strongly supported} \\
+P4: ICT self-efficacy $>$ simple ICT availability & ICT taxonomy: skills compound beyond access & ICTEFFIC vs.\ ICTHOME/ICTSCH & ICTEFFIC 0.0062; access vars.\ 0.0008 each & \textbf{Supported} \\
+P5: ICT usage quality $>$ ICT usage quantity & ICT taxonomy --- productive usage matters more than frequency & ICTSUBJ vs.\ ICTINFO importance & ICTSUBJ: 0.0033; ICTINFO: 0.0010 & \textbf{Supported} \\
+P6: Cross-context heterogeneity in feature rankings & Hierarchical org.\ + ICT taxonomy --- effects are contextual & SHAP ranking stability across country groups & Cross-group $\rho$~=~0.72--0.99 & \textbf{Supported} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+All six propositions received empirical support, as expected given their derivation from established frameworks. The validation functions as a structured plausibility check rather than a discovery of unexpected relationships; its contribution is making domain assumptions explicit and testable. Future work should formulate propositions that distinguish between competing theoretical accounts, where disconfirmation would carry more information.
+
+\subsection{ICT feature analysis}
+
+The ICT importance pattern has three implications. The model separates material access from perceived competence, and self-efficacy carries greater predictive weight---matching second-level digital divide research \citep{Scheerder_2017,Hargittai_2010}. The lower importance of school ICT availability relative to home ICT resources aligns with evidence that school-level ICT provision alone does not automatically translate into learning gains. These findings complement recent PISA 2022 analyses using different methodologies: Joshi et al.\ \citep{Joshi_2025_digital_literacy} found that digital literacy and confidence positively mediated achievement, while Zeng \citep{Zeng_2025} identified ICT familiarity and attitudes as important predictors using latent profile analysis and Lasso regression. The convergence between SEM-based mediation and ML-based importance rankings strengthens the conclusion that \emph{how} students engage with digital technology matters more than \emph{whether} they have access.
+
+\subsection{Cross-context generalization}
+
+The robustness checks reveal substantively important cross-country variation, in line with the hierarchical feature organization: the contextual level shapes how lower-level features operate, so models trained on one set of contexts generalize less well to others. Country fixed effects improve performance, confirming that country identity captures contextual-level variation. The country-group holdout results carry a clear deployment implication: a single global model cannot be assumed to perform equally well across all countries, and the system should not be deployed in a given country context without local validation data. This aligns with broader calls for context-aware evaluation in applied ML and with fairness research emphasizing subgroup performance transparency \citep{Kizilcec_Lee_2022}.
+
+\subsection{Knowledge-based system design implications}
+
+This knowledge-based system's architecture offers several practical advantages for deployment in educational assessment contexts:
+
+\textbf{Knowledge engineering reuse.} The knowledge representation layer's hierarchical feature organization and ICT taxonomy provide a reusable template for PISA 2025, TIMSS, PIRLS, and other large-scale assessment contexts. The variable audit procedure (Supplementary Table~S6) documents every predictor's provenance, missingness, and ecological level, enabling other researchers to adapt the knowledge acquisition and representation layers to new assessment cycles with minimal re-engineering.
+
+\textbf{Computational accessibility.} The full pipeline runs on an Apple M-series workstation (16~GB unified memory, $\sim$12~hours), lowering adoption barriers for institutions without HPC resources. The Bayesian HPO strategy (Optuna, 50 trials) balances exploration with computational cost, and the fixed random seed (20260510) ensures reproducibility.
+
+\textbf{Explanation validation.} The cross-method validation protocol---comparing SHAP, permutation importance, and ALE with Spearman's~$\rho$ and documenting LIME's divergence---provides a template for explanation quality assessment that extends beyond education to any domain with correlated tabular predictors.
+
+\textbf{Fairness-aware decision support.} The intersectional analysis identifies specific population segments the system serves less well; the observed ABROCA values (0.008--0.023) and intersectional AUC gap (0.072) establish quantitative baselines for equitable deployment. This fairness dashboard is designed for assessment program managers who need to verify that predictive models serve all population segments equitably before deploying early-warning interventions. For example, a program manager reviewing the system's output would observe that low-SES immigrant-background students have the largest AUC gap (0.072) relative to the most-served subgroup, and could use this information to trigger targeted resource allocation or to flag the subgroup for human review before acting on early-warning predictions. Formal user-interface design and deployment-specific dashboards are deferred to future work. The fairness evaluation layer can be extended with mitigation procedures as the evidence base for bias reduction in educational ML matures.
+
+\textbf{Malleable feature monitoring.} Mathematics self-efficacy and ICT self-efficacy carry considerable predictive weight and may respond to intervention. While predictive importance does not imply causality, consistency with educational psychology findings \citep{Bandura_1977_self_efficacy} suggests these constructs merit monitoring as leading indicators within the system's decision-support output.
+
+\section{Limitations}
+\label{sec:limitations}
+
+\textbf{Causal inference and generalizability.}
+This study is cross-sectional and observational; findings identify predictive patterns rather than causal effects. PISA 2022 data were collected post-COVID-19, though a supplementary PISA 2018 comparison found moderate-to-strong inter-wave feature importance stability (Spearman's~$\rho$~$>$~0.70), suggesting core patterns are not exclusively pandemic-era artifacts \citep{Lavelle_Hill_2024}. Cross-country generalization is limited: the country-group holdout (AUC~=~0.847 vs.\ 0.903) and considerable per-country performance variation (Supplementary Table~S8) indicate that a single global model cannot serve all contexts equally.
+
+\textbf{Methodological scope.}
+Primary models were evaluated on a single stratified 80/20 holdout rather than $k$-fold CV; a supplementary 5-fold CV with default-parameter models confirmed negligible partition sensitivity at this sample size (AUC~=~0.890~$\pm$~0.001). The negligible cross-fold variance indicates that random partition choice does not materially affect performance estimates at this sample size (613,744 students), and the bootstrap confidence intervals from 1,000 resamples of holdout predictions (RMSE 54.10 [53.58, 54.66], AUC 0.903 [0.898, 0.907]) provide an alternative quantification of estimate uncertainty. A full $k$-fold CV on the tuned model would require approximately 10 additional compute-hours (the tuned pipeline runs in about 2 hours per fold at the full 613,744-row sample size), which was not budgeted; the supplementary evidence is sufficient to establish partition stability. The country-group holdout decline (AUC~=~0.847) documented above reflects genuine contextual variation rather than partition instability. Intrinsically interpretable models (EBMs, GAMs) were not included as primary baselines; a preliminary benchmark---an EBM trained on a 30,000-row sample and scored unweighted on the same holdout---confirmed their competitiveness (EBM AUC~=~0.873 vs.\ 0.898 for tuned XGBoost under the same unweighted scoring; the weighted primary AUC is 0.903). The EBM's built-in feature importance (via \texttt{explain\_global}) showed broad agreement with SHAP rankings; both methods identified the same top-two predictors (home possessions and mathematics self-efficacy) and diverged primarily on mid-ranked ICT variables where EBM's additive structure produces sparser importance estimates. A formal rank correlation was not conducted given the 30,000-row training subset. The stacking ensemble underperformed the best single model, and the two-learner variant (LightGBM~+~XGBoost) that would test the dilution hypothesis was not evaluated.
+
+\textbf{Data and fairness limitations.}
+Several variables had moderate-to-high missingness (e.g., mathematics self-efficacy 23.5\%); median imputation may attenuate variance for affective constructs. ML workflows do not perfectly align with complex survey estimation procedures---student weights are incorporated where supported, but prediction metrics remain model-evaluation quantities rather than design-consistent population estimates. The system identifies fairness concerns (ABROCA~=~0.023, intersectional AUC gap~=~0.072) but does not implement bias-mitigation procedures.
+
+\textbf{Knowledge framework and expertise.}
+The knowledge-based feature organization enables group-level interpretation inaccessible from a flat feature representation. Under a flat representation, the seven ICT variables would appear as independently varying predictors; the ICT taxonomy makes visible that three access-level variables (ICTRES, ICTHOME, ICTSCH) exhibit near-zero importance while skills-level ICTEFFIC ranks in the top 10---a pattern that would be statistically present but narratively invisible without the taxonomic organization. However, no formal ablation experiment compares organized versus flat feature representations on interpretability outcomes. A natural next step---beyond the scope of the present study but feasible given the reproducible pipeline---would be to train a comparison model on the flat feature set and quantify whether the taxonomic organization improves explanation coherence (e.g., cross-group SHAP stability, interpretability scores) or alters the relative ranking of ICT dimensions. This single-author study spans multiple domains; the structured knowledge validation framework (Table~\ref{tab:propositions}) was designed to make domain assumptions explicit and testable, mitigating the risk of unchallenged blind spots.
+
+\section{Conclusion}
+
+This study presented a knowledge-based system that integrates hierarchical feature organization, an ICT taxonomy, tree-based ensembles with Bayesian optimization, multi-method XAI, and formal fairness evaluation into a reproducible workflow for global-scale educational assessment.
+
+Returning to the research questions: (1) individual-level features---particularly home possessions and mathematics self-efficacy---are the strongest predictors, with ICT resources and ICT self-efficacy consistently ranking among the most important; (2) tuned tree-based ensembles outperform linear baselines by a substantial margin (23\% RMSE reduction); (3) SHAP, permutation importance, and ALE rankings converge (Spearman's~$\rho$~=~0.76--0.83), while LIME diverges substantially under feature correlation, serving as a methodological caution; and (4) performance and explanations are broadly stable across subgroups, though cross-country generalization is limited and socioeconomic disparities constitute the largest fairness concern (ABROCA~=~0.023). All six knowledge-derived propositions received empirical support.
+
+The system makes three contributions to knowledge-based systems research: (a) a modular, reproducible knowledge-based system architecture operating on an Apple M-series workstation, comprising knowledge acquisition, representation, inference, extraction, and decision-support layers; (b) a knowledge representation template for large-scale assessment contexts, demonstrating how ecological systems theory and digital divide research can be encoded as hierarchical feature structures and ICT taxonomies; and (c) a decision-support framework integrating formal fairness evaluation with intersectional subgroup analysis that establishes quantitative baselines for equitable deployment. The practical implication is not that ML should replace traditional educational statistics, but that knowledge-based, fairness-aware systems can complement them---provided model explanations are interpreted as fitted-model patterns rather than causal claims and cross-context generalization limitations are transparently documented.
+
+% ============================================================
+% DECLARATIONS
+% ============================================================
+
+\FloatBarrier
+
+\section*{CRediT authorship contribution statement}
+
+\textbf{Zhiren Xiao}: Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data Curation, Writing -- Original Draft, Writing -- Review \& Editing, Visualization.
+
+\section*{Declaration of competing interest}
+
+The author declares that he has no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Data availability}
+
+The data are publicly available from the OECD PISA 2022 Database \citep{OECD_2022_database}. Analysis code and non-restricted derived outputs are available in a public GitHub repository structured as a reproducible computational benchmark. The repository provides a complete end-to-end pipeline from input validation through final table and figure generation, with fixed random seeds and deterministic explanation samples. The repository does not redistribute OECD raw data files. Trained model artifacts are available from the author upon reasonable request, subject to OECD data use agreement constraints.
+
+\section*{Ethics statement}
+
+This study uses publicly available, de-identified secondary data from the OECD PISA 2022 Database. No new human participants were recruited and no individual-level identifiable data were accessed. As this research consists of secondary analysis of publicly available, de-identified data with no direct interaction with human subjects, it does not require formal ethical approval under standard educational research ethics guidelines. Guangdong University of Finance has confirmed that no institutional ethics review or exemption process applies to research of this nature.
+
+\section*{Declaration of generative AI and AI-assisted technologies in the writing process}
+
+AI-assisted tools were used for programming support, reproducible analysis organization, literature search, and language editing. AI tools were NOT used for study design, data interpretation, theoretical framework selection, drawing substantive conclusions, or final manuscript approval. The author remains fully responsible for all intellectual content. This statement is consistent with Elsevier's AI authorship policy and COPE guidelines.
+
+% ============================================================
+% REFERENCES
+% ============================================================
+
+\FloatBarrier
+\bibliography{references}
+
+% ============================================================
+% SUPPLEMENTARY MATERIALS
+% ============================================================
+
+\clearpage
+\section*{Supplementary Materials}
+
+\input{tables/table_S1_ale.tex}
+\input{tables/table_S2_fairness.tex}
+\input{tables/table_S3_literature_benchmark.tex}
+\input{tables/table_S4_explanation_stability.tex}
+\input{tables/table_S5_xai_ranking.tex}
+\input{tables/table_S6_variable_audit.tex}
+\input{tables/table_S6b_variable_audit_excluded.tex}
+\input{tables/table_S7_hyperparameters.tex}
+\input{tables/table_S7b_hyperparameters_perf.tex}
+\input{tables/table_S8_per_country.tex}
+
+\end{document}

@@ -1,0 +1,24 @@
+\begin{table}[htp]
+\centering
+\caption{Explanation stability across ESCS quintile subgroups. Pairwise Spearman's $\rho$ rank correlation of SHAP-based feature importance rankings between ESCS quintiles. All correlations are significant at $p < 0.001$ except Q1--Q5 ($p = 3 \times 10^{-6}$).}
+\label{tab:explanation-stability}
+\begin{tabular}{lcc}
+\toprule
+Subgroup pair & Spearman's $\rho$ & $p$-value \\
+\midrule
+\multicolumn{3}{l}{\textbf{ESCS quintile comparisons}} \\
+Q1 (lowest) vs.\ Q2 & 0.897 & $<0.001$ \\
+Q1 (lowest) vs.\ Q3 & 0.851 & $<0.001$ \\
+Q1 (lowest) vs.\ Q4 & 0.811 & $<0.001$ \\
+Q1 (lowest) vs.\ Q5 (highest) & 0.715 & $3\times10^{-6}$ \\
+Q2 vs.\ Q3 & 0.987 & $<0.001$ \\
+Q2 vs.\ Q4 & 0.962 & $<0.001$ \\
+Q2 vs.\ Q5 (highest) & 0.847 & $<0.001$ \\
+Q3 vs.\ Q4 & 0.984 & $<0.001$ \\
+Q3 vs.\ Q5 (highest) & 0.860 & $<0.001$ \\
+Q4 vs.\ Q5 (highest) & 0.873 & $<0.001$ \\
+\bottomrule
+\end{tabular}
+
+\par\small Feature importance rankings were computed using SHAP on the best classification model (tuned XGBoost) with 33 shared features. Higher ESCS quintiles indicate greater socioeconomic advantage. The lowest cross-group consistency (Q1 vs.\ Q5, $\rho = 0.72$) suggests modestly divergent feature importance patterns between the most and least advantaged students.
+\end{table}

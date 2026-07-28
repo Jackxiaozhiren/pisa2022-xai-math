@@ -1,0 +1,23 @@
+\begin{table}[htp]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{0.92}
+\caption{Variable audit: excluded, robustness-only, and unavailable features (Part~2).\label{tab:variables-excluded}}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllrcl@{}}
+\toprule
+\textbf{Variable} & \textbf{Construct} & \textbf{Group} & \textbf{Missing (\%)} & \textbf{Available} & \textbf{Decision} \\
+\midrule
+  \texttt{PQSCHOOL} & parent-school relationship & family & 85.3\% & Yes & excluded (missing) \\
+  \texttt{PASCHPOL} & parental view of school policy & family & 85.4\% & Yes & excluded (missing) \\
+  \texttt{PERFEED} & perceived feedback & school & --- & No & unavailable \\
+  \texttt{ICTDISTR} & digital distraction & digital & 56.8\% & Yes & robustness only \\
+  \texttt{LEARNRES} & learning resources & digital & --- & No & unavailable \\
+  \texttt{DISTICT} & distance-learning ICT & digital & --- & No & unavailable \\
+\bottomrule
+\end{tabular}%
+}
+\begin{tablenotes}
+\item Note. PQSCHOOL and PASCHPOL exceed 80\% missingness. PERFEED, LEARNRES, and DISTICT are absent from public-use files. ICTDISTR retained for extended/robustness analysis only.
+\end{tablenotes}
+\end{table}

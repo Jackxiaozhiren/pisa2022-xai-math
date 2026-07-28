@@ -1,0 +1,21 @@
+\begin{table}[htp]
+\centering
+\small
+\caption{Structured comparison of the present study with published PISA-ML studies from 2024--2025. Performance metrics, sample characteristics, and methodological features are compared.}
+\label{tab:literature-benchmark}
+\begin{tabular}{lcccccc}
+\toprule
+Study & Sample & Countries & AUC & R\textsuperscript{2}/RMSE & XAI & Fairness \\
+\midrule
+This study & 613,744 & 80 (global) & 0.903 & 0.681/54.10 & Multi-method & Formal \\
+\citet{Khine_2024} & $\sim$14,000 & 1 (Australia) & -- & 0.42/-- & -- & -- \\
+\citet{Gomez_Talal_2025} & $\sim$30,800 & 1 (Spain) & 0.977 & -- & SHAP + UMAP & -- \\
+\citet{Huang_2024} & 34,968 & 6 (East Asia) & -- & -- & SHAP & -- \\
+\citet{Oz_2025_stacking} & $\sim$613,000 & 80 (global) & -- & -- & None & None \\
+\citet{Cheung_2024_resilience} & $\sim$500,000 & 79 (global) & -- & -- & SHAP & Subgroup \\
+\citet{Zhu_2025_US_PISA} & 4,552 & 1 (USA) & -- & -- & SHAP + ALE & -- \\
+\bottomrule
+\end{tabular}
+
+\par\small  Dashes indicate metrics or features not reported in the published study. Comparisons are offered as contextual benchmarks rather than competitive claims.
+\end{table}

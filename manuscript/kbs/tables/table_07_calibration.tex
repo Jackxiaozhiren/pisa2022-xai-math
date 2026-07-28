@@ -1,0 +1,39 @@
+\begin{table}[htp]
+\centering
+\small
+\caption{Calibration diagnostics for the best classification model (tuned XGBoost, AUC~=~0.903)\label{tab:calibration}}
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+  Brier score & 0.126 \\
+  Mean predicted probability & 0.534 \\
+  Observed low-performer rate & 0.539 \\
+  Calibration intercept & 0.0469 \\
+  Calibration slope & 0.987 \\
+  Expected calibration error (ECE) & 0.0077 \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+
+\begin{tabular}{@{}rrcrrr@{}}
+\toprule
+\textbf{Bin} & \textbf{Pred. range} & \textbf{\textit{n}} & \textbf{Mean pred.} & \textbf{Observed} & \textbf{Gap} \\
+\midrule
+  1 & [0.0000, 0.1] & 29,856 & 0.036 & 0.037 & 0.0001 \\
+  2 & [0.1, 0.2] & 12,174 & 0.148 & 0.172 & 0.025 \\
+  3 & [0.2, 0.3] & 9,256 & 0.249 & 0.256 & 0.006 \\
+  4 & [0.3, 0.4] & 8,129 & 0.350 & 0.390 & 0.041 \\
+  5 & [0.4, 0.5] & 7,955 & 0.450 & 0.462 & 0.012 \\
+  6 & [0.5, 0.6] & 7,669 & 0.549 & 0.542 & 0.007 \\
+  7 & [0.6, 0.7] & 7,839 & 0.651 & 0.653 & 0.002 \\
+  8 & [0.7, 0.8] & 9,098 & 0.753 & 0.746 & 0.007 \\
+  9 & [0.8, 0.9] & 11,340 & 0.854 & 0.855 & 0.001 \\
+  10 & [0.9, 1.0] & 19,433 & 0.959 & 0.963 & 0.004 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Note. Calibration metrics evaluated on the weighted classification holdout set ($n = 122{,}749$). ECE computed across 10 equal-width probability bins weighted by bin sample proportion. The calibration intercept and slope are from a logistic calibration model with predicted logits as the sole predictor.
+\end{tablenotes}
+\end{table}
