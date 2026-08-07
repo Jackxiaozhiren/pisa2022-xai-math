@@ -30,6 +30,26 @@ DIGITAL_FEATURES = {
     "STUDYHMW",
 }
 
+# Digital divide level mapping for color coding
+DD_LEVEL = {
+    "ICTRES": "Access",
+    "ICTHOME": "Access",
+    "ICTSCH": "Access",
+    "ICTEFFIC": "Skills/Confidence",
+    "ICTINFO": "Usage",
+    "ICTDISTR": "Usage",
+    "ICTSUBJ": "Usage",
+    "STUDYHMW": "Usage",
+    "LEARNRES": "Usage",
+    "DISTICT": "Usage",
+}
+
+DD_COLORS = {
+    "Access": "#2563eb",
+    "Skills/Confidence": "#16a34a",
+    "Usage": "#ea580c",
+}
+
 
 def sample_for_explanation(x, y, max_rows: int, random_state: int):
     if len(x) <= max_rows:
@@ -41,19 +61,33 @@ def sample_for_explanation(x, y, max_rows: int, random_state: int):
 def plot_digital_importance(importance, output_path: Path) -> None:
     require_package("matplotlib", "pip install -r requirements.txt")
     import matplotlib.pyplot as plt
+    from matplotlib.patches import Patch
 
     digital = importance[importance["feature"].isin(DIGITAL_FEATURES)].copy()
     if digital.empty:
         return
     digital = digital.sort_values("importance_mean", ascending=True)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.figure(figsize=(7, max(3, 0.35 * len(digital))))
-    plt.barh(digital["feature"], digital["importance_mean"], xerr=digital["importance_std"])
-    plt.xlabel("Permutation importance")
-    plt.ylabel("Digital-learning feature")
-    plt.tight_layout()
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close()
+
+    fig, ax = plt.subplots(figsize=(7, max(3, 0.35 * len(digital))))
+    colors = [DD_COLORS.get(DD_LEVEL.get(f, ""), "#6b7280") for f in digital["feature"]]
+    bars = ax.barh(digital["feature"], digital["importance_mean"],
+                   xerr=digital.get("importance_std", None),
+                   color=colors, edgecolor="white", linewidth=0.5)
+
+    # Legend showing digital divide levels
+    legend_elements = [
+        Patch(facecolor="#2563eb", label="Access"),
+        Patch(facecolor="#16a34a", label="Skills/Confidence"),
+        Patch(facecolor="#ea580c", label="Usage"),
+    ]
+    ax.legend(handles=legend_elements, fontsize=8, loc="lower right")
+
+    ax.set_xlabel("Permutation Importance", fontsize=10)
+    ax.set_ylabel("Digital-Learning Feature", fontsize=10)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
 
 
 def main() -> int:

@@ -1,0 +1,52 @@
+\begin{table}[tb]
+\centering
+\caption{Variable audit: availability, missingness, and model-use decision.\label{tab:variables}}
+\begin{tabular}{@{}lllrcl@{}}
+\toprule
+\textbf{Variable} & \textbf{Construct} & \textbf{Group} & \textbf{Missing (\%)} & \textbf{Available} & \textbf{Decision} \\
+\midrule
+  \texttt{ST004D01T} & gender & student & 0.0\% & Yes & main model \\
+  \texttt{GRADE} & grade placement & student & 4.0\% & Yes & main model \\
+  \texttt{AGE} & age & student & 0.0\% & Yes & main model \\
+  \texttt{ESCS} & economic, social, and cultural status & student & 4.1\% & Yes & main model \\
+  \texttt{IMMIG} & immigrant background & student & 7.3\% & Yes & main model \\
+  \texttt{HISEI} & parental occupational status & student & 11.9\% & Yes & main model \\
+  \texttt{PAREDINT} & parental education & student & 4.8\% & Yes & main model \\
+  \texttt{HOMEPOS} & home possessions & student & 2.6\% & Yes & main model \\
+  \texttt{ANXMAT} & mathematics anxiety & student & 22.5\% & Yes & main model \\
+  \texttt{MATHEFF} & mathematics self-efficacy & student & 23.5\% & Yes & main model \\
+  \texttt{MATHEF21} & mathematics self-efficacy & student & 20.6\% & Yes & main model \\
+  \texttt{MATHPERS} & mathematics persistence & student & 18.1\% & Yes & main model \\
+  \texttt{FAMCON} & family connection & student & 46.8\% & Yes & main model \\
+  \texttt{BELONG} & school belonging & student & 8.5\% & Yes & main model \\
+  \texttt{BULLIED} & bullying exposure & student & 7.5\% & Yes & main model \\
+  \texttt{FEELSAFE} & feeling safe at school & student & 15.7\% & Yes & main model \\
+  \texttt{SCHRISK} & school risk climate & student & 23.8\% & Yes & main model \\
+  \texttt{FAMSUP} & family support & family & 22.9\% & Yes & main model \\
+  \texttt{PQSCHOOL} & parent-school relationship & family & 85.3\% & Yes & excluded excluded (missing) \\
+  \texttt{PASCHPOL} & parental view of school policy & family & 85.4\% & Yes & excluded excluded (missing) \\
+  \texttt{DISCLIM} & disciplinary climate & school & 11.6\% & Yes & main model \\
+  \texttt{TEACHSUP} & teacher support & school & 15.6\% & Yes & main model \\
+  \texttt{COGACRCO} & cognitive activation & school & 14.7\% & Yes & main model \\
+  \texttt{COGACMCO} & cognitive activation & school & 19.0\% & Yes & main model \\
+  \texttt{PERFEED} & perceived feedback & school & --- & No & unavailable \\
+  \texttt{STUBEHA} & student behavior hindering learning & school & 17.6\% & Yes & main model \\
+  \texttt{TEACHBEHA} & teacher behavior hindering learning & school & 9.9\% & Yes & main model \\
+  \texttt{EDUSHORT} & educational material shortage & school & 10.8\% & Yes & main model \\
+  \texttt{STAFFSHORT} & staff shortage & school & 21.5\% & Yes & main model \\
+  \texttt{ICTRES} & ICT resources & digital & 42.8\% & Yes & main model \\
+  \texttt{ICTHOME} & ICT availability or use at home & digital & 46.0\% & Yes & main model \\
+  \texttt{ICTSCH} & ICT availability or use at school & digital & 43.5\% & Yes & main model \\
+  \texttt{ICTEFFIC} & ICT self-efficacy & digital & 49.2\% & Yes & main model \\
+  \texttt{ICTINFO} & ICT information behavior & digital & 48.1\% & Yes & main model \\
+  \texttt{ICTDISTR} & digital distraction & digital & 56.8\% & Yes & extended/robustness \\
+  \texttt{ICTSUBJ} & subject-related ICT use & digital & 47.0\% & Yes & main model \\
+  \texttt{LEARNRES} & learning resources & digital & --- & No & unavailable \\
+  \texttt{DISTICT} & distance-learning ICT & digital & --- & No & unavailable \\
+  \texttt{STUDYHMW} & homework or study time & digital & 6.3\% & Yes & main model \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Note. Missing rates computed on the full processed frame ($n = 613{,}744$). The main model missingness threshold is 50\%. PQSCHOOL and PASCHPOL exceed 80\% missingness and are excluded. ICTDISTR is retained for extended/robustness use only. PERFEED, LEARNRES, and DISTICT are not available in the public-use files.
+\end{tablenotes}
+\end{table}

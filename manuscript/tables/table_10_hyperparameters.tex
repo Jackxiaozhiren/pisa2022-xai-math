@@ -1,0 +1,66 @@
+\begin{table}[tb]
+\centering
+\small
+\caption{Hyperparameter optimisation: default vs.\ tuned values and performance improvement for XGBoost and LightGBM.\label{tab:hyperparameters}}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Model} & \textbf{Hyperparameter} & \textbf{Default} & \textbf{Tuned} & \textbf{Search space} \\
+\midrule
+\multicolumn{5}{c}{\textit{Regression task (minimise RMSE)}} \\
+\midrule
+XGBoost & $n_{\text{estimators}}$ & 100 & 487 & [100, 800] \\
+ & Learning rate & 0.30 & 0.048 & [0.01, 0.20] log-uniform \\
+ & Max depth & 6 & 7 & [3, 12] \\
+ & Subsample & 1.00 & 0.84 & [0.60, 1.00] \\
+ & Colsample by tree & 1.00 & 0.76 & [0.60, 1.00] \\
+ & $\lambda$ (L2 reg.) & 1.00 & 0.043 & [$10^{-8}$, 1.00] log-uniform \\
+ & $\alpha$ (L1 reg.) & 0.00 & 0.018 & [$10^{-8}$, 1.00] log-uniform \\
+\midrule
+LightGBM & $n_{\text{estimators}}$ & 100 & 412 & [100, 800] \\
+ & Learning rate & 0.10 & 0.062 & [0.01, 0.20] log-uniform \\
+ & Max depth & $-$1 (unlimited) & 8 & [3, 12] \\
+ & Num leaves & 31 & 63 & [15, 127] \\
+ & Subsample & 1.00 & 0.81 & [0.60, 1.00] \\
+ & Colsample by tree & 1.00 & 0.72 & [0.60, 1.00] \\
+ & $\lambda$ (L2 reg.) & 0.00 & 0.12 & [$10^{-8}$, 1.00] log-uniform \\
+\midrule
+\multicolumn{5}{c}{\textit{Classification task (minimise log-loss)}} \\
+\midrule
+XGBoost & $n_{\text{estimators}}$ & 100 & 523 & [100, 800] \\
+ & Learning rate & 0.30 & 0.041 & [0.01, 0.20] log-uniform \\
+ & Max depth & 6 & 8 & [3, 12] \\
+ & Subsample & 1.00 & 0.79 & [0.60, 1.00] \\
+ & Colsample by tree & 1.00 & 0.71 & [0.60, 1.00] \\
+ & $\lambda$ (L2 reg.) & 1.00 & 0.087 & [$10^{-8}$, 1.00] log-uniform \\
+ & $\alpha$ (L1 reg.) & 0.00 & 0.024 & [$10^{-8}$, 1.00] log-uniform \\
+\midrule
+LightGBM & $n_{\text{estimators}}$ & 100 & 378 & [100, 800] \\
+ & Learning rate & 0.10 & 0.057 & [0.01, 0.20] log-uniform \\
+ & Max depth & $-$1 (unlimited) & 9 & [3, 12] \\
+ & Num leaves & 31 & 95 & [15, 127] \\
+ & Subsample & 1.00 & 0.76 & [0.60, 1.00] \\
+ & Colsample by tree & 1.00 & 0.69 & [0.60, 1.00] \\
+ & $\lambda$ (L2 reg.) & 0.00 & 0.095 & [$10^{-8}$, 1.00] log-uniform \\
+\bottomrule
+\end{tabular}
+
+\par\small\textit{Performance improvement summary:}
+
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+\textbf{Model} & \textbf{Task} & \textbf{RMSE (default)} & \textbf{RMSE (tuned)} & \textbf{$\Delta$RMSE} & \textbf{R\textsuperscript{2} (tuned)} \\
+\midrule
+XGBoost & Regression & 59.81 & 54.10 & $-$5.71 (9.5\%) & 0.681 \\
+LightGBM & Regression & 57.61 & 54.15 & $-$3.46 (6.0\%) & 0.680 \\
+\cmidrule{2-6}
+ &  & \textbf{AUC (default)} & \textbf{AUC (tuned)} & \textbf{$\Delta$AUC} & \textbf{Brier (tuned)} \\
+\cmidrule{2-6}
+XGBoost & Classification & 0.882 & 0.903 & +0.021 & 0.126 \\
+LightGBM & Classification & 0.890 & 0.902 & +0.012 & 0.126 \\
+\bottomrule
+\end{tabular}
+
+\begin{tablenotes}
+\item Note. Tuning performed via Bayesian optimisation (Optuna, 50 trials per model--task combination) on a 15\% validation subset of the training data. The regression objective minimised RMSE; the classification objective minimised log-loss. Tuned hyperparameters were then used to train final models on the full training set. Performance improvement assessed on the weighted 20\% holdout set ($n = 122{,}749$). Random seed 20260510 fixed throughout.
+\end{tablenotes}
+\end{table}

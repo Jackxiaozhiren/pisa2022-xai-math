@@ -1,0 +1,26 @@
+\begin{table}[tb]
+\centering
+\caption{Weighted holdout classification performance, main feature set, default threshold 0.50.\label{tab:classification}}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+\textbf{Model} & \textbf{AUC} & \textbf{Avg. Prec.} & \textbf{F1} & \textbf{Precision} & \textbf{Recall} & \textbf{Brier} \\
+\midrule
+\multicolumn{7}{c}{\textit{Default-parameter models}} \\
+\midrule
+  Logistic (L2) & 0.840 & 0.853 & 0.789 & 0.748 & 0.835 & 0.164 \\
+  Random forest & 0.870 & 0.882 & 0.808 & 0.777 & 0.841 & 0.148 \\
+  Hist. gradient boosting & 0.889 & 0.902 & 0.817 & 0.809 & 0.824 & 0.135 \\
+  XGBoost & 0.882 & 0.895 & 0.813 & 0.800 & 0.826 & 0.139 \\
+  LightGBM & 0.890 & 0.903 & 0.818 & 0.811 & 0.826 & 0.134 \\
+\midrule
+\multicolumn{7}{c}{\textit{Hyperparameter-optimised models}} \\
+\midrule
+  \textbf{XGBoost (tuned)} & \textbf{0.903} & \textbf{0.916} & \textbf{0.828} & \textbf{0.822} & \textbf{0.834} & \textbf{0.126} \\
+  LightGBM (tuned) & 0.902 & 0.915 & 0.827 & 0.820 & 0.833 & 0.126 \\
+  Stacking ensemble & 0.894 & 0.907 & 0.821 & 0.814 & 0.828 & 0.131 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Note. $n_\text{train} = 490{,}995$, $n_\text{test} = 122{,}749$, weighted by normalized W\_FSTUWT. Low-performer threshold: mathematics score < 420.07 (below PISA Level 2). AUC = area under the ROC curve; Avg. Prec. = average precision; Brier = Brier score. Tuned hyperparameters obtained via Bayesian optimisation (Optuna, 50 trials per model--task); see Table~\ref{tab:hyperparameters}. Stacking ensemble: RF + LightGBM + XGBoost base learners, logistic meta-learner, 5-fold CV. Bold values denote best overall performance.
+\end{tablenotes}
+\end{table}

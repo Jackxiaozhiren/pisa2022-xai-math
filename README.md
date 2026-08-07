@@ -1,86 +1,73 @@
-# PISA 2022 Knowledge-Informed Expert System for Educational Assessment
+# Explainable and Fair Machine Learning for Educational Analytics
 
-This repository implements the reproducible pipeline for the paper:
+Reproducible analysis pipeline for the paper:
 
-**A Knowledge-Informed Expert System for Educational Assessment: Multi-Method Explainable AI with Formal Fairness Evaluation on Global-Scale Student Achievement Data**
+**Explainable and Fair Machine Learning for Educational Analytics: Interpreting PISA 2022 Mathematics Achievement across 80 Countries**
 
-Target journal: *Expert Systems with Applications* (ESWA).
+Target journal: *IEEE Transactions on Learning Technologies* (TLT).
 
-## What Is Already Implemented
+## Overview
 
-- Project structure for data, scripts, reports, documentation, and manuscript files.
-- PISA-aware constants for student weights, replicate weights, plausible values, and low-performer threshold.
-- Reusable Python modules for:
-  - locating and loading PISA files;
-  - computing BRR standard errors;
-  - combining plausible-value estimates;
-  - selecting candidate variables;
-  - building baseline and machine-learning models;
-  - evaluating regression and classification tasks;
-  - producing SHAP or permutation-importance explanations.
-- Script sequence from input checks to model interpretation.
-- Literature matrix, variable plan, manuscript skeleton, cover letter, highlights, and data availability text.
+This repository implements a fully reproducible analytical framework that combines multi-method explainable AI (XAI) with formal algorithmic-fairness evaluation on large-scale international assessment data. It predicts PISA 2022 mathematics achievement for 613,744 students across 80 countries and economies using theory-driven feature organization (Bronfenbrenner's ecological systems theory + van Dijk's ICT taxonomy), tuned XGBoost/LightGBM ensembles, four XAI methods (SHAP, permutation importance, ALE, LIME) with rank-correlation convergence validation, and intersectional fairness auditing (Equalized Odds, Demographic Parity, ABROCA).
 
-## What You Need To Provide
+## Reproducibility
 
-Place the downloaded PISA 2022 public use files in `data/raw/`.
-
-Recommended files:
-
-- Student questionnaire data file, usually named like `CY08MSP_STU_QQQ.sav`, `.sas7bdat`, `.csv`, or `.parquet`.
-- School questionnaire data file, usually named like `CY08MSP_SCH_QQQ.sav`, `.sas7bdat`, `.csv`, or `.parquet`.
-- OECD codebook and technical report PDF, optional but useful for final methods writing.
-
-Official source: [OECD PISA 2022 Database](https://www.oecd.org/en/data/datasets/pisa-2022-database.html).
+- **Fixed random seed**: `20260510` (set in `configs/project.json` and used across all scripts)
+- **Deterministic explanation samples**: SHAP 5,000 rows; permutation 10,000 rows × 5 repeats; ALE 5,000 rows / 20 bins; LIME 500 instances
+- **Runtime**: ~12 hours on a single workstation
+- **Weights**: final student weights `W_FSTUWT` (mean-normalized); 80 BRR replicate weights for descriptive estimates; 10 mathematics plausible values
 
 ## Setup
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Current machine note: the base Python environment does not have the required analysis packages installed yet.
+## Data
+
+Place the downloaded PISA 2022 public-use files in `data/raw/`:
+
+- Student questionnaire data (e.g., `CY08MSP_STU_QQQ.sav` / `.parquet`)
+- School questionnaire data (e.g., `CY08MSP_SCH_QQQ.sav` / `.parquet`)
+
+Official source: [OECD PISA 2022 Database](https://www.oecd.org/en/data/datasets/pisa-2022-database.html).
+
+This repository does **not** redistribute OECD raw data files.
 
 ## Run Order
 
 ```bash
-python scripts/00_check_inputs.py
-python scripts/01_prepare_data.py
-python scripts/02_describe_sample.py
-python scripts/03_train_models.py
-python scripts/04_explain_models.py
-python scripts/06_robustness_checks.py
-python scripts/05_build_tables.py
+python scripts/00_check_inputs.py      # verify inputs
+python scripts/01_prepare_data.py      # prepare analysis frame
+python scripts/02_describe_sample.py   # descriptive statistics (BRR + PV)
+python scripts/03_train_models.py      # train + tune models, holdout predictions
+python scripts/04_explain_models.py    # SHAP / permutation / LIME explanations
+python scripts/06_robustness_checks.py # 8 robustness checks + calibration
+python scripts/05_build_tables.py      # build result tables
+python scripts/08_generate_latex_tables.py
+python scripts/09_visualizations.py    # publication figures
+python scripts/10_counterfactual_xai.py
+python scripts/11_umap_dpi.py
+python scripts/12_multi_xai_comparison.py
+python scripts/13_explanation_stability.py
+python scripts/14_ale_analysis.py
+python scripts/15_fairness_evaluation.py   # formal fairness metrics + intersectional audit
+python scripts/23_per_country_analysis.py  # per-country performance
+python scripts/24_mice_robustness.py
+python scripts/26_ebm_baseline.py          # glass-box baseline
+python scripts/27_knowledge_ablation.py
+python scripts/28_kfold_cv.py              # supplementary 5-fold CV
 ```
 
-The scripts fail early with clear messages if required PISA files or Python packages are missing.
+## Key Results
 
-For the manuscript draft, keep `05_build_tables.py` last so the generated artifact index includes every table and figure.
+- Tuned XGBoost: AUC = 0.903 (95% bootstrap CI [0.898, 0.907]), RMSE = 54.10 (R² = 0.681), 23% RMSE reduction over ridge
+- XAI convergence: SHAP/permutation/ALE ρ = 0.76–0.83; LIME diverges (ρ < 0.03) under feature correlation
+- Fairness: SES is the largest concern (ABROCA = 0.027); low-SES immigrant-background students most underserved (AUC 0.779 vs 0.880)
+- Country-group holdout AUC = 0.847 — context-specific validation required before deployment
 
-## Default Analysis Decisions
+## License
 
-- Continuous outcome: mean of `PV1MATH` through `PV10MATH` for model training convenience; plausible-value pooling is retained for descriptive/statistical estimates.
-- Classification outcome: low-performing student, default threshold `PV*MATH < 420.07`, matching the lower bound of PISA mathematics Level 2.
-- Weight: `W_FSTUWT`.
-- Replicate weights: `W_FSTURWT1` through `W_FSTURWT80`.
-- Main target journal: **Expert Systems with Applications** (ESWA).
-
-## Important Statistical Guardrails
-
-- Do not describe predictors as causes unless a separate causal design is added.
-- Report PISA weights and plausible values in the methods.
-- Use replicate weights for standard errors in descriptive and regression-style claims.
-- Use machine learning metrics for prediction and SHAP for interpretation, while explicitly distinguishing prediction importance from statistical significance.
-
-## Local Validation
-
-Pure Python utility tests:
-
-```bash
-PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'
-```
-
-Full pipeline validation requires the dependencies and PISA data files.
+MIT.
