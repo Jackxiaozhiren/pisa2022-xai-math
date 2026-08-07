@@ -59,13 +59,15 @@ python scripts/24_mice_robustness.py
 python scripts/26_ebm_baseline.py          # glass-box baseline
 python scripts/27_knowledge_ablation.py
 python scripts/28_kfold_cv.py              # supplementary 5-fold CV
+python scripts/29_xai_convergence_verify.py # XAI convergence recomputation (verified rho values)
+python scripts/30_headline_intersectional.py # merged headline intersectional subgroup audit
 ```
 
 ## Key Results
 
-- Tuned XGBoost: AUC = 0.903 (95% bootstrap CI [0.898, 0.907]), RMSE = 54.10 (R² = 0.681), 23% RMSE reduction over ridge
-- XAI convergence: SHAP/permutation/ALE ρ = 0.76–0.83; LIME diverges (ρ < 0.03) under feature correlation
-- Fairness: SES is the largest concern (ABROCA = 0.027); low-SES immigrant-background students most underserved (AUC 0.779 vs 0.880)
+- Tuned XGBoost: AUC = 0.903 (95% bootstrap CI [0.898, 0.907]), RMSE = 54.10 (R² = 0.681), 23% RMSE reduction over the default-parameter ridge baseline
+- XAI convergence (recomputed): cross-model SHAP ρ = 0.99; SHAP vs permutation 0.81; SHAP vs ALE 0.63; LIME diverges (ρ = 0.01) under feature correlation
+- Fairness: SES is the largest concern (ABROCA = 0.027); low-SES immigrant-background students most underserved (AUC 0.779 vs 0.880, gap 0.101, n = 2,495 in holdout)
 - Country-group holdout AUC = 0.847 — context-specific validation required before deployment
 
 ## License
