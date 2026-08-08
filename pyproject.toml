@@ -19,8 +19,16 @@ dependencies = [
   "statsmodels>=0.14",
   "PyYAML>=6.0",
   "openpyxl>=3.1",
-  "tqdm>=4.66"
+  "tqdm>=4.66",
+  "optuna>=3.6",
+  "dice-ml>=0.11",
+  "umap-learn>=0.5",
+  "lime>=0.2"
 ]
+
+# Note: requirements.txt is the canonical install file (see README); the
+# [project] dependencies above mirror it so pyproject and requirements stay
+# consistent for reproducibility.
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.4"]
