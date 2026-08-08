@@ -1,0 +1,2 @@
+n_holdout,auc_point,auc_ci_lower,auc_ci_upper,rmse_point,rmse_ci_lower,rmse_ci_upper,intersectional_gap_point,intersectional_gap_ci_lower,intersectional_gap_ci_upper,seed,n_bootstrap
+122749,0.9026437743425535,0.8983,0.9067,54.0990417589463,53.58,54.66,-0.1059818014428282,-0.1675,-0.0462,20260510,1000

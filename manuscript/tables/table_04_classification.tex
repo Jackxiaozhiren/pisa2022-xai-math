@@ -1,6 +1,7 @@
-\begin{table}[tb]
+\begin{table*}[!t]
 \centering
-\caption{Weighted holdout classification performance, main feature set, default threshold 0.50.\label{tab:classification}}
+\caption{Weighted holdout classification performance, main feature set, default threshold 0.50\label{tab:classification}}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
 \textbf{Model} & \textbf{AUC} & \textbf{Avg. Prec.} & \textbf{F1} & \textbf{Precision} & \textbf{Recall} & \textbf{Brier} \\
@@ -13,14 +14,15 @@
   XGBoost & 0.882 & 0.895 & 0.813 & 0.800 & 0.826 & 0.139 \\
   LightGBM & 0.890 & 0.903 & 0.818 & 0.811 & 0.826 & 0.134 \\
 \midrule
-\multicolumn{7}{c}{\textit{Hyperparameter-optimised models}} \\
+\multicolumn{7}{c}{\textit{Hyperparameter-optimized models}} \\
 \midrule
   \textbf{XGBoost (tuned)} & \textbf{0.903} & \textbf{0.916} & \textbf{0.828} & \textbf{0.822} & \textbf{0.834} & \textbf{0.126} \\
   LightGBM (tuned) & 0.902 & 0.915 & 0.827 & 0.820 & 0.833 & 0.126 \\
   Stacking ensemble & 0.894 & 0.907 & 0.821 & 0.814 & 0.828 & 0.131 \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \begin{tablenotes}
-\item Note. $n_\text{train} = 490{,}995$, $n_\text{test} = 122{,}749$, weighted by normalized W\_FSTUWT. Low-performer threshold: mathematics score < 420.07 (below PISA Level 2). AUC = area under the ROC curve; Avg. Prec. = average precision; Brier = Brier score. Tuned hyperparameters obtained via Bayesian optimisation (Optuna, 50 trials per model--task); see Table~\ref{tab:hyperparameters}. Stacking ensemble: RF + LightGBM + XGBoost base learners, logistic meta-learner, 5-fold CV. Bold values denote best overall performance.
+\item Note. $n_\text{train} = 490{,}995$, $n_\text{test} = 122{,}749$, weighted by normalized W\_FSTUWT. Low-performer threshold: mathematics score < 420.07 (below PISA Level 2). AUC = area under the ROC curve; Avg. Prec. = average precision; Brier = Brier score. Tuned hyperparameters obtained via Bayesian optimization (Optuna, 50 trials per model--task). Stacking ensemble: RF + LightGBM + XGBoost base learners, logistic meta-learner, 5-fold CV. Bold values denote best overall performance.
 \end{tablenotes}
-\end{table}
+\end{table*}

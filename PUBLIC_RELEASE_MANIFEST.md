@@ -6,7 +6,7 @@ This package is the cleaned public-release copy of the PISA 2022 XAI mathematics
 
 ## Included
 
-- Analysis code: `src/`, `scripts/` (23 scripts: 00–22)
+- Analysis code: `src/`, `scripts/` (31 numbered scripts 00–31, plus supporting utilities)
 - Configuration and tests: `configs/`, `tests/`, `pyproject.toml`, `requirements.txt`
 - Manuscript source and submission support files: `manuscript/` (main TeX, supplementary TeX, Markdown source, BibTeX, 10 LaTeX tables, 5 supplementary LaTeX tables, declarations, checklist, QA reports)
 - Aggregate tables: `reports/tables/` (32 CSV files)

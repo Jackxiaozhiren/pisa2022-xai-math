@@ -1,7 +1,8 @@
-\begin{table}[tb]
+\begin{table*}[!t]
 \centering
 \small
-\caption{Subgroup holdout performance for the best classification model (tuned XGBoost) by gender, immigrant background, and ESCS quintile.\label{tab:subgroup}}
+\caption{Subgroup holdout performance for the tuned XGBoost model by gender, immigrant background, and ESCS quintile (classification AUC, F1, precision, recall, Brier; regression RMSE)\label{tab:subgroup}}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llrrrrrrr@{}}
 \toprule
 \textbf{Group} & \textbf{Value} & \textbf{\textit{n}} & \textbf{AUC} & \textbf{F1} & \textbf{Prec.} & \textbf{Recall} & \textbf{Brier} & \textbf{RMSE} \\
@@ -22,8 +23,9 @@
    & Q5 & 23,552 & 0.886 & 0.460 & 0.672 & 0.350 & 0.097 & 58.99 \\
    & missing & 4,991 & 0.788 & 0.722 & 0.717 & 0.726 & 0.191 & 67.33 \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \begin{tablenotes}
 \item Note. Results for the best classification model (tuned XGBoost) on the test partition ($n = 122{,}749$), weighted by normalized W\_FSTUWT. ESCS = index of economic, social, and cultural status. The missing-ST004D01T row ($n = 16$) and missing-ESCS row ($n = 4{,}991$) are included for completeness but should be interpreted with caution due to small or selected samples.
 \end{tablenotes}
-\end{table}
+\end{table*}

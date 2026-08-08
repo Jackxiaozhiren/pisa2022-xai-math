@@ -1,0 +1,291 @@
+% ============================================================
+% IEEE TLT — Supplementary Materials
+% Accompanying: Explainable and Fair Machine Learning for
+% Educational Analytics: Interpreting PISA 2022 Mathematics
+% Achievement across 80 Countries
+% ============================================================
+\documentclass[journal]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+
+\begin{document}
+
+\title{Supplementary Materials: Explainable and Fair Machine Learning for Educational Analytics}
+
+\author{Zhiren Xiao}
+
+\maketitle
+
+\section{Algorithmic Fairness Metrics by Subgroup}
+\label{sec:s1}
+
+Table~\ref{tab:supp-fairness} reports formal algorithmic fairness metrics for the best classification model (tuned XGBoost) across gender, immigrant background, and ESCS quartile groups, including intersectional combinations. ABROCA values below 0.01 are generally considered negligible, 0.01--0.03 modest but noteworthy, and above 0.03 potentially actionable~\cite{Gandara_2024_blackbox,Verger_2024_MADD}. By these benchmarks, gender disparities are negligible, immigrant-background disparities are modest, and SES-based disparities are the most pronounced, approaching the actionable threshold.
+
+\begin{table}[!t]
+\centering
+\caption{Formal Algorithmic Fairness Metrics by Subgroup}
+\label{tab:supp-fairness}
+\footnotesize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+Group & EO TPR gap & EO FPR gap & Dem. Parity & ABROCA \\
+\midrule
+Gender (F vs.\ M) & 0.005 & 0.005 & 0.004 & 0.006 \\
+Immigrant (Native vs.\ Non-native) & 0.100 & 0.082 & 0.159 & 0.010 \\
+ESCS (Q4 vs.\ Q1) & 0.470 & 0.230 & 0.523 & 0.027 \\
+\addlinespace
+\multicolumn{5}{l}{\textit{Intersectional combinations (AUC, F1)}} \\
+\multicolumn{5}{l}{Low-ESCS, non-native immigrant (merged audit): AUC 0.779, F1 0.750} \\
+\multicolumn{5}{l}{High-ESCS, native (reference): AUC 0.880, F1 0.484} \\
+\bottomrule
+\end{tabular}%
+}
+\vspace{2pt}
+{\footnotesize Equalized Odds (EO) is reported as the absolute true-positive-rate (TPR) and false-positive-rate (FPR) gaps at the 0.50 threshold; the large ESCS gap reflects the low base rate of low performers among high-SES students. ABROCA $<$0.01 negligible, 0.01--0.03 modest, $>$0.03 actionable~\cite{Gandara_2024_blackbox,Verger_2024_MADD}. Intersectional AUC gap between the least- and most-served subgroups is 0.101.}
+\end{table}
+
+\section{Explanation Stability across Socioeconomic Subgroups}
+\label{sec:s2}
+
+SHAP-based feature importance rankings showed high cross-group agreement across ESCS quintiles (Table~\ref{tab:supp-stability}). The lowest consistency between the most extreme quintiles (Q1 vs.\ Q5, $\rho = 0.72$) indicates that the fitted model relied on a broadly similar predictor set across socioeconomic groups, with modestly divergent patterns at the extremes.
+
+\begin{table}[!t]
+\centering
+\caption{Explanation Stability Across ESCS Quintile Subgroups}
+\label{tab:supp-stability}
+\footnotesize
+\begin{tabular}{lcc}
+\toprule
+Subgroup pair & Spearman's $\rho$ & $p$-value \\
+\midrule
+Q1 (lowest) vs.\ Q2 & 0.897 & $<$0.001 \\
+Q1 (lowest) vs.\ Q3 & 0.851 & $<$0.001 \\
+Q1 (lowest) vs.\ Q4 & 0.811 & $<$0.001 \\
+Q1 (lowest) vs.\ Q5 (highest) & 0.715 & $3\times10^{-6}$ \\
+Q2 vs.\ Q3 & 0.987 & $<$0.001 \\
+Q2 vs.\ Q4 & 0.962 & $<$0.001 \\
+Q2 vs.\ Q5 (highest) & 0.847 & $<$0.001 \\
+Q3 vs.\ Q4 & 0.984 & $<$0.001 \\
+Q3 vs.\ Q5 (highest) & 0.860 & $<$0.001 \\
+Q4 vs.\ Q5 (highest) & 0.873 & $<$0.001 \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+{\footnotesize Feature importance rankings computed using SHAP on the best classification model (tuned XGBoost) with 33 shared features.}
+\end{table}
+
+\section{Per-Country Model Performance}
+\label{sec:s3}
+
+Per-country AUC and RMSE varied substantially across the 80 economies (Table~\ref{tab:per-country}); performance showed no simple monotone income gradient, with the full breakdown confirming that a single global model cannot be assumed to perform equally across contexts.
+
+\input{tables/table_S8_per_country.tex}
+
+\section{Additional Robustness Checks}
+\label{sec:s4}
+
+Three further sensitivity analyses complement the robustness results in the main text. First, a complete-case analysis (restricting to the 6.47\% of students with data on all 33 predictors) reduced the unweighted low-performer rate from 45.54\% to 37.88\%, confirming that complete-case analysis would substantially alter the analyzed population and supporting the imputation choice. Second, per-plausible-value label sensitivity: recomputing the low-performer label for each of the ten mathematics plausible values yielded low-performer rates ranging from 45.24\% to 45.34\% (a spread of 0.10 percentage points), within 0.30 percentage points of the mean-plausible-value label (45.54\%), indicating that the modeling outcome is not sensitive to the choice of plausible value. Third, temporal explanation stability: SHAP-based feature-importance rankings computed on PISA 2018 mathematics data were stable relative to PISA 2022---66.7\% of features changed rank by at most one position and 88.9\% by at most two, and HOMEPOS remained the top-ranked predictor in both cycles.
+
+\section{Predictor Definitions and Theoretical Assignment}
+\label{sec:s5}
+
+Table~\ref{tab:supp-features} enumerates all 33 predictors retained for the main models, with their theoretical-group assignment (the five individual-level construct groups, the school climate and resources group, and the ICT access, skills, and usage groups), construct, and missingness rate. The grouping operationalizes the four ecological levels (individual, interaction, institutional, contextual) and the van Dijk ICT taxonomy; ICT variables are additionally classified by access, skills, and usage dimensions.
+
+\begin{table*}[!t]
+\centering
+\caption{Predictor Assignments, Constructs, and Missingness for the 33 Retained Features}
+\label{tab:supp-features}
+\small
+\begin{tabular}{@{}p{3.0cm}p{5.2cm}p{5.2cm}r@{}}
+\toprule
+\textbf{Theoretical group} & \textbf{Variable (construct)} & \textbf{Definition} & \textbf{Missingness} \\
+\midrule
+Individual: Home \& SES & HOMEPOS (home possessions) & Index of household possessions and amenities & 2.6\% \\
+ & HISEI (parental occupation) & Highest parental occupational status & 11.9\% \\
+ & PAREDINT (parental education) & Highest parental education level & 4.8\% \\
+ & ESCS (socioeconomic status) & Composite economic, social, and cultural status index & 4.1\% \\
+\addlinespace
+Individual: Self-beliefs & MATHEFF (math self-efficacy) & Student-reported confidence in mathematics tasks & 23.5\% \\
+ & MATHEF21 (math self-efficacy) & Extended self-efficacy scale (PISA 2022) & 20.6\% \\
+ & MATHPERS (math persistence) & Persistence when solving mathematics problems & 18.1\% \\
+ & ANXMAT (math anxiety) & Mathematics anxiety scale & 22.5\% \\
+\addlinespace
+Individual: Belonging \& Safety & BELONG (school belonging) & Sense of belonging to school & 8.5\% \\
+ & BULLIED (bullying exposure) & Frequency of bullying victimization & 7.5\% \\
+ & FEELSAFE (school safety) & Feeling safe at school & 15.7\% \\
+ & SCHRISK (risk climate) & School disciplinary-risk climate & 23.8\% \\
+ & FAMSUP (family support) & Family support for learning & 22.9\% \\
+ & FAMCON (family connection) & Family connection and communication & 46.8\% \\
+\addlinespace
+Individual: Demographics & ST004D01T (gender) & Student gender & 0.0\% \\
+ & IMMIG (immigrant background) & Native vs.\ first- or second-generation immigrant & 7.3\% \\
+ & GRADE (grade placement) & Modal grade vs.\ age-adjusted grade & 4.0\% \\
+ & AGE (age) & Student age in years & 0.0\% \\
+\addlinespace
+Individual: Teaching \& Cognitive & DISCLIM (disciplinary climate) & Perceived disciplinary climate in class & 11.6\% \\
+ & TEACHSUP (teacher support) & Perceived teacher support & 15.6\% \\
+ & COGACRCO (cognitive activation) & Cognitive-activation strategies (recall) & 14.7\% \\
+ & COGACMCO (cognitive activation) & Cognitive-activation strategies (metacognitive) & 19.0\% \\
+\addlinespace
+School: Climate \& Resources & STUBEHA (student behavior) & School-level student behaviors hindering learning & 17.6\% \\
+ & TEACHBEHA (teacher behavior) & School-level teacher behaviors hindering learning & 9.9\% \\
+ & EDUSHORT (material shortage) & School educational-material shortage & 10.8\% \\
+ & STAFFSHORT (staff shortage) & School staff shortage & 21.5\% \\
+\addlinespace
+ICT: Access & ICTRES (ICT resources) & Composite ICT-resources index & 42.8\% \\
+ & ICTHOME (ICT at home) & ICT availability and use at home & 46.0\% \\
+ & ICTSCH (ICT at school) & ICT availability and use at school & 43.5\% \\
+\addlinespace
+ICT: Skills & ICTEFFIC (ICT self-efficacy) & Confidence using digital devices & 49.2\% \\
+\addlinespace
+ICT: Usage & ICTINFO (ICT information) & Information-seeking behavior with ICT & 48.1\% \\
+ & ICTSUBJ (subject ICT use) & ICT use for subject-specific learning & 47.0\% \\
+ & STUDYHMW (study time) & Hours of homework or study time & 6.3\% \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+{\footnotesize Constructs follow the OECD PISA 2022 questionnaire scales; definitions are abbreviated. Missingness is the proportion of students without a value on the variable in the processed analysis frame; predictors with missingness at or below 50\% were retained and imputed (median for numeric, most-frequent for categorical).}
+\end{table*}
+
+\section{Ecological-Level Attribution and Subgroup Calibration Detail}
+\label{sec:s6}
+
+Table~\ref{tab:supp-layer} reports the aggregated SHAP attribution by theoretically defined group for the low-performer classification model, and Table~\ref{tab:supp-calibration} reports subgroup calibration.
+
+\begin{table}[!t]
+\centering
+\caption{Ecological-Level Aggregated SHAP Attribution for the Low-Performer Classification Model}
+\label{tab:supp-layer}
+\footnotesize
+\begin{tabular}{lcc}
+\toprule
+Theoretical group & $\sum$ SHAP & \# features \\
+\midrule
+Individual: home and SES & 0.883 & 4 \\
+Individual: self-beliefs & 0.867 & 4 \\
+Individual: belonging and safety & 0.807 & 6 \\
+Individual: teaching and cognitive & 0.540 & 4 \\
+Individual: demographics & 0.433 & 4 \\
+School: climate and resources & 0.598 & 4 \\
+ICT: access & 0.457 & 3 \\
+ICT: usage & 0.340 & 3 \\
+ICT: skills & 0.148 & 1 \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+{\footnotesize Sum of mean absolute SHAP contributions of the features in each theoretically defined group, from the tuned classification model over the deterministic 5,000-row explanation sample. Individual-level groups carry the largest total attribution; within the ICT groups, the single skill variable (ICTEFFIC) outweighs the device-availability variables (ICTHOME/ICTSCH), consistent with the skills-over-access pattern in the main text.}
+\end{table}
+
+\begin{table}[!t]
+\centering
+\caption{Subgroup Calibration for the Best Classification Model (Tuned XGBoost)}
+\label{tab:supp-calibration}
+\footnotesize
+\begin{tabular}{lcc}
+\toprule
+Group & Calibration slope & ECE \\
+\midrule
+Overall & 0.987 & 0.008 \\
+Female & 0.990 & 0.009 \\
+Male & 0.983 & 0.011 \\
+Native & 1.012 & 0.007 \\
+Immigrant background & 0.813 & 0.062 \\
+ESCS Q1 (lowest) & 0.979 & 0.011 \\
+ESCS Q4 (highest) & 0.988 & 0.020 \\
+Low-SES non-native & 0.602 & 0.122 \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+{\footnotesize Calibration slope from a logistic regression of observed low-performer status on the logit of predicted probabilities (weighted by normalized student weights); values below 1 indicate overconfidence. ECE = expected calibration error over ten equal-width probability bins, weighted. The global ECE (0.008) matches the calibration figure in the main text; the immigrant-background and low-SES non-native groups are markedly overconfident.}
+\end{table}
+
+\section{Operational Threshold, Disparate-Impact, and Local Case Analyses}
+\label{sec:s7}
+
+Formal fairness metrics are threshold-dependent, so we examine the operating characteristics of the tuned model at the default 0.50 threshold and at the per-subgroup Youden operating point (Table~\ref{tab:supp-threshold}). At the single 0.50 threshold, operating characteristics differ markedly across groups: low-SES students are flagged at a true-positive rate of 0.937 (with a false-positive rate of 0.491), whereas high-SES students are flagged at only 0.393 true-positive (0.046 false-positive)---the model effectively searches harder among low-SES students, consistent with their higher low-performer base rate. Immigrant-background students are flagged at 0.626 true-positive, notably below native students, echoing the under-flagging implied by their subgroup calibration. Moving to a subgroup-specific Youden threshold rebalances true- and false-positive rates (e.g., low-SES non-native: TPR 0.728$\to$0.691, FPR 0.375$\to$0.235), illustrating the accuracy--fairness operating-point trade-off a deployment must choose deliberately.
+
+\begin{table}[!t]
+\centering
+\caption{Operating Characteristics of the Tuned Model at the 0.50 and Per-Subgroup Youden Thresholds}
+\label{tab:supp-threshold}
+\footnotesize
+\begin{tabular}{lcc ccc}
+\toprule
+ & \multicolumn{2}{c}{0.50 threshold} & \multicolumn{3}{c}{Youden point} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-6}
+Group & TPR & FPR & threshold & TPR & FPR \\
+\midrule
+Overall & 0.838 & 0.204 & 0.55 & 0.811 & 0.172 \\
+ESCS Q1 & 0.937 & 0.491 & 0.70 & 0.844 & 0.273 \\
+ESCS Q4 & 0.393 & 0.046 & 0.30 & 0.664 & 0.120 \\
+Immigrant background & 0.626 & 0.139 & 0.35 & 0.757 & 0.219 \\
+High-SES native & 0.408 & 0.048 & 0.30 & 0.676 & 0.122 \\
+Low-SES non-native & 0.728 & 0.375 & 0.57 & 0.691 & 0.235 \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+{\footnotesize TPR = true-positive rate; FPR = false-positive rate, weighted by normalized student weights. The Youden point maximizes TPR minus FPR over a 0.30--0.70 threshold scan. At a single global threshold the model flags low-SES students at much higher rates than high-SES students, reflecting base-rate differences; per-subgroup thresholds rebalance the operating point.}
+\end{table}
+
+Disparate-impact screening (the ``4/5ths'' rule~\cite{feldman2015disparate}: an unprivileged selection rate below 80\% of the privileged rate signals adverse impact) applied to the early-warning selection at the 0.50 threshold gives a ratio of 0.61 for immigrant-background versus native students and 0.13 for highest- versus lowest-ESCS students. The immigrant ratio is an equity concern: immigrant-background students have a \emph{higher} low-performer rate than native students yet are flagged \emph{less}, consistent with the subgroup overconfidence documented in Section~S6. The ESCS ratio is prevalence-driven and points the other way---low-SES students are flagged far more often, which is the intended targeting of an equity-aware early-warning system; it illustrates that a raw 4/5ths screen must be read together with base rates and the selection context (support targeting rather than benefit allocation).
+
+\section{A Reusable Fairness-Audit Protocol}
+\label{sec:s8}
+
+The evaluation design used here can be packaged as a reusable protocol for auditing predictive models in education:
+\begin{enumerate}
+\item \emph{Outcome and reference group}: fix the outcome definition (e.g., low-performer label) and the privileged/unprivileged reference groups before any model fit.
+\item \emph{Primary metric}: use a base-rate-independent ranking metric (ABROCA here) as the operative signal, and report prevalence-sensitive metrics (DP, EO TPR/FPR gaps, F1 gradient) transparently alongside it.
+\item \emph{Uncertainty}: report bootstrap confidence intervals on every headline gap (including intersectional gaps), and state whether resampling respects the clustered sampling design.
+\item \emph{Calibration parity}: check calibration separately within each protected group (ECE, slope), not only globally.
+\item \emph{Intersectional screen}: audit the pairwise (and, where sample size permits, higher-order) intersections of protected attributes, not only each axis alone.
+\item \emph{Operating point}: document the threshold and its per-subgroup operating characteristics, and screen the deployment selection with the 4/5ths rule alongside base rates.
+\item \emph{Reporting}: publish the per-subgroup metrics, calibration, and operating-point tables in a fixed template (as in this supplementary) so that audits are comparable across contexts and cycles.
+\end{enumerate}
+A longitudinal extension of this protocol---repeating the audit on PISA 2018 to quantify fairness drift---is feasible; the 2022 cycle's post-pandemic context makes such drift hard to interpret causally, and we leave a formal drift decomposition as future work.
+
+\section{Additional Local Explanation Case Studies}
+\label{sec:s9}
+
+Two additional holdout cases complement the borderline case discussed in the main text. First, a correctly flagged student from the low-SES non-native intersection (Dominican Republic, first-generation immigrant, ESCS = $-3.82$) is assigned a low-performer probability of 0.999 and does score 285.6, well below the threshold: the model reliably identifies the most materially disadvantaged students. Second, a high-SES native student (Jordan, ESCS = 0.60) is assigned a probability of 0.961 yet scores 445.4 and is not a low performer: the model can misfire toward over-flagging even for advantaged students, underscoring the value of human review rather than automated denial of support. Both cases are presented as illustrations of fitted-model behavior on the holdout partition, not as evidence about individual students or their circumstances.
+
+\section{Optuna Search Space}
+\label{sec:s10}
+
+Table~\ref{tab:supp-optuna} reports the Bayesian-optimization search space used for the tuned XGBoost and LightGBM models (50 trials per model--task on a 15\% validation subset, optimizing AUC for classification and RMSE for regression, seed 20260510).
+
+\begin{table}[!t]
+\centering
+\caption{Optuna Search Space for Tuned Ensemble Models}
+\label{tab:supp-optuna}
+\footnotesize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lll}
+\toprule
+Hyperparameter & Range & Scale \\
+\midrule
+n\_estimators & 100--800 & integer \\
+learning\_rate & 0.01--0.20 & log \\
+max\_depth & 3--12 (XGBoost), 3--10 (LightGBM) & integer \\
+min\_child\_weight (XGBoost) & 1--50 & integer \\
+min\_child\_samples (LightGBM) & 20--200 & integer \\
+num\_leaves (LightGBM) & 15--127 & integer \\
+subsample & 0.6--1.0 & continuous \\
+colsample\_bytree & 0.6--1.0 & continuous \\
+reg\_alpha / reg\_lambda & $10^{-8}$--1.0 & log \\
+\bottomrule
+\end{tabular}%
+}
+\vspace{2pt}
+{\footnotesize The winning configurations are reported in Table~II of the main text; this table reports the ranges searched, making the tuning reproducible.}
+\end{table}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

@@ -1,7 +1,8 @@
-\begin{table}[tb]
+\begin{table*}[!t]
 \centering
 \small
-\caption{Country-context robustness checks.\label{tab:country}}
+\caption{Cross-context robustness: OECD-only holdout, country fixed-effects sensitivity, and country-group holdout evaluation\label{tab:country}}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}lrrrrrrr@{}}
 \toprule
 \textbf{Check} & \textbf{\textit{n}} & \textbf{Countries} & \textbf{AUC} & \textbf{F1} & \textbf{Brier} & \textbf{RMSE} & \textbf{R\textsuperscript{2}} \\
@@ -11,8 +12,9 @@
   Country FE: with & 120,000 & --- & 0.873 & 0.802 & 0.145 & 64.85 & 0.568 \\
   Country-group holdout & 27,008 & Train 64 / Test 16 & 0.847 & 0.691 & 0.154 & 65.23 & 0.502 \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \begin{tablenotes}
-\item Note. OECD holdout: LightGBM evaluated on the OECD-member subset of the global holdout partition. Country FE: lightweight random forest models on a 120,000-row robustness sample, with and without CNT as a categorical predictor. Country-group holdout: LightGBM trained on 64 countries and evaluated on 16 held-out countries (Australia, Chile, Croatia, Estonia, Germany, Israel, Jordan, Malaysia, Malta, Mongolia, Montenegro, New Zealand, Serbia, Slovenia, Spain, United Kingdom). All metrics weighted by normalized W\_FSTUWT.
+\item Note. OECD holdout: the best tuned XGBoost classification model evaluated on the OECD-member subset of the global holdout partition. Country FE: lightweight ridge (regression) and logistic (classification) models on a deterministic 120,000-row robustness subsample, with and without CNT as a categorical predictor. Country-group holdout: default-parameter LightGBM trained on 64 countries and evaluated on 16 held-out countries (Australia, Chile, Croatia, Estonia, Germany, Israel, Jordan, Malaysia, Malta, Mongolia, Montenegro, New Zealand, Serbia, Slovenia, Spain, United Kingdom). All metrics weighted by normalized W\_FSTUWT.
 \end{tablenotes}
-\end{table}
+\end{table*}
