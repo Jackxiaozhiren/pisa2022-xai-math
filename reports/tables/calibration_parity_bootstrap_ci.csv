@@ -1,0 +1,2 @@
+bootstrap_resamples,bootstrap_seed,ece_diff_point,ece_diff_ci_lower,ece_diff_ci_upper,slope_diff_ci_lower,slope_diff_ci_upper,slope_diff_point
+1000,20260510,0.11449916579127835,0.07718648479235228,0.17420644961940504,-0.5318538427794104,-0.16557890210649392,-0.384538883986717

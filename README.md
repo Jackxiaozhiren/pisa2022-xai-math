@@ -1,10 +1,10 @@
-# Explainable and Fair Machine Learning for Educational Analytics
+# Explainable and Fairness-Audited Machine Learning for Large-Scale Educational Assessment
 
 Reproducible analysis pipeline for the paper:
 
-**Explainable and Fair Machine Learning for Educational Analytics: Interpreting PISA 2022 Mathematics Achievement across 80 Countries**
+**Explainable and Fairness-Audited Machine Learning for Large-Scale Educational Assessment: Multi-Method XAI and a Calibration-Parity Audit on PISA 2022 across 80 Countries**
 
-Target journal: *IEEE Transactions on Learning Technologies* (TLT).
+Target journal: *Engineering Applications of Artificial Intelligence* (EAAI, Elsevier).
 
 ## Overview
 

@@ -1,0 +1,32 @@
+\begin{table}[!t]
+\centering
+\caption{Intersectional Calibration-Parity Audit for the Best Classification Model}
+\label{tab:calibration-parity}
+\footnotesize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Group & $n$ & Brier & ECE & Calib. slope \\
+\midrule
+All students & 122,749 & 0.1260 & 0.008 & 0.987 \\
+Gender: Female & 60,761 & 0.1269 & 0.009 & 0.990 \\
+Gender: Male & 61,972 & 0.1252 & 0.011 & 0.983 \\
+Immigrant: Native student & 99,949 & 0.1256 & 0.008 & 1.006 \\
+Immigrant: First-Generation student & 6,703 & 0.1477 & 0.054 & 0.831 \\
+Immigrant: Second-Generation student & 7,257 & 0.1624 & 0.077 & 0.814 \\
+ESCS Q1 & 29,440 & 0.1148 & 0.011 & 0.979 \\
+ESCS Q2 & 29,439 & 0.1404 & 0.019 & 1.023 \\
+ESCS Q3 & 29,439 & 0.1401 & 0.015 & 0.996 \\
+ESCS Q4 & 29,440 & 0.1030 & 0.020 & 0.988 \\
+Low-SES non-native (intersection) & 2,495 & 0.1971 & 0.122 & 0.602 \\
+High-SES native (reference) & 25,663 & 0.1008 & 0.019 & 0.995 \\
+\bottomrule
+\end{tabular}%
+}
+\vspace{2pt}
+{\footnotesize ECE computed over ten equal-width probability bins, population-weighted by normalized W\_FSTUWT.
+Calibration slope from a weighted logistic regression of observed low-performer status on the logit of predicted probability;
+a slope below 1 indicates overconfidence. Global model: slope 0.987, ECE 0.008.
+The low-SES non-native intersection shows slope 0.602 and ECE 0.122 --- an order-of-magnitude degradation
+relative to the global model --- while high-SES native calibration remains near-parity.
+}\end{table}

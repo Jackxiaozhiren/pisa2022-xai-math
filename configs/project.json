@@ -1,6 +1,6 @@
 {
-  "project_title": "A Knowledge-Informed Expert System for Educational Assessment: Multi-Method Explainable AI with Formal Fairness Evaluation on Global-Scale Student Achievement Data",
-  "target_journal": "Expert Systems with Applications (ESWA)",
+  "project_title": "Explainable and Fairness-Audited Machine Learning for Large-Scale Educational Assessment: Multi-Method XAI and a Calibration-Parity Audit on PISA 2022 across 80 Countries",
+  "target_journal": "Engineering Applications of Artificial Intelligence (EAAI)",
   "paths": {
     "raw_dir": "data/raw",
     "interim_dir": "data/interim",
