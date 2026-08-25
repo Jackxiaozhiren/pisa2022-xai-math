@@ -10,6 +10,27 @@ Target journal: *Engineering Applications of Artificial Intelligence* (EAAI, Els
 
 This repository implements a fully reproducible analytical framework that combines multi-method explainable AI (XAI) with formal algorithmic-fairness evaluation on large-scale international assessment data. It predicts PISA 2022 mathematics achievement for 613,744 students across 80 countries and economies using theory-driven feature organization (Bronfenbrenner's ecological systems theory + van Dijk's ICT taxonomy), tuned XGBoost/LightGBM ensembles, four XAI methods (SHAP, permutation importance, ALE, LIME) with rank-correlation convergence validation, and intersectional fairness auditing (Equalized Odds, Demographic Parity, ABROCA).
 
+## EAAI v5 Route A update (2026-08-25)
+
+The current EAAI-facing analysis is a conservative model-level verification
+and validation route. It uses ten plausible values, 80 Fay--BRR replicate
+weights, population-versus-SENWT sensitivity, a matched additive EBM, and a
+whole-school unseen-institution cold-start stress test. The active values are
+not the historical row-wise-PV-mean headline:
+
+- Primary PV-pooled XGBoost: AUC 0.8865, Brier 0.1375, RMSE 59.82, R² 0.6346.
+- Matched EBM: AUC 0.8689, Brier 0.1465, RMSE 66.15, R² 0.5531.
+- Unseen-school secondary validation: AUC 0.8865, Brier 0.1358, RMSE 61.02, R² 0.6219, evaluated on 4,326 held-out schools across 80 countries.
+- The intersectional C1 signal remains descriptive: design-aware intervals cross zero and senate sensitivity attenuates or reverses point contrasts.
+
+The reproducible scripts, aggregate outputs, manifests and methodology records
+are in `scripts/33_*`, `scripts/34_*`, `scripts/36_*`, `scripts/37_*`,
+`src/pisa_xai/v5_survey.py`, `reports/tables/v5_*`, and `docs/v5_eaai/`.
+
+The repository still excludes OECD raw data, row-level predictions, fitted
+models and submission identity materials. Obtain raw PISA files directly from
+the [OECD PISA 2022 Database](https://www.oecd.org/en/data/datasets/pisa-2022-database.html).
+
 ## Reproducibility
 
 - **Fixed random seed**: `20260510` (set in `configs/project.json` and used across all scripts)
@@ -63,7 +84,7 @@ python scripts/29_xai_convergence_verify.py # XAI convergence recomputation (ver
 python scripts/30_headline_intersectional.py # merged headline intersectional subgroup audit
 ```
 
-## Key Results
+## Legacy baseline (historical; not manuscript-active)
 
 - Tuned XGBoost: AUC = 0.903 (95% bootstrap CI [0.898, 0.907]), RMSE = 54.10 (R² = 0.681), 23% RMSE reduction over the default-parameter ridge baseline
 - XAI convergence (recomputed): cross-model SHAP ρ = 0.99; SHAP vs permutation 0.81; SHAP vs ALE 0.63; LIME diverges (ρ = 0.01) under feature correlation
