@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use these reproducibility materials, please cite this software repository and, once published, the associated article."
+title: "Explainable and Fairness-Audited Machine Learning for PISA 2022 Mathematics"
+type: software
+version: 0.1.0
+authors:
+  - family-names: Xiao
+    given-names: Zhiren
+repository-code: "https://github.com/Jackxiaozhiren/pisa2022-xai-math"
+url: "https://github.com/Jackxiaozhiren/pisa2022-xai-math"
+license: MIT
+abstract: "Reproducible PISA 2022 mathematics workflow combining survey-aware predictive modeling, explainable AI, robustness analysis, and fairness auditing across 80 countries and economies."
+keywords:
+  - PISA 2022
+  - explainable AI
+  - algorithmic fairness
+  - educational assessment
+  - survey statistics
+  - reproducibility

@@ -2,39 +2,39 @@
 
 Repository target: `Jackxiaozhiren/pisa2022-xai-math`
 
-This package is the cleaned public-release copy of the PISA 2022 XAI mathematics project. It is intended for a GitHub repository containing reproducible code, manuscript source, aggregate outputs, and source manifests.
+This repository is the cleaned public research-companion copy of the PISA 2022 XAI mathematics project. It is intended to contain reproducible code, manuscript/scientific source material, aggregate outputs, and source manifests—not private submission workflow artifacts.
 
 ## Included
 
-- Analysis code: `src/`, `scripts/` (legacy scripts plus v5 Route A scripts 33, 34, 36 and 37)
+- Analysis code: `src/`, `scripts/` (legacy workflow plus manuscript-active Route A scripts)
 - Configuration and tests: `configs/`, `tests/`, `pyproject.toml`, `requirements.txt`
-- Manuscript source and submission support files: `manuscript/` (main TeX, supplementary TeX, Markdown source, BibTeX, 10 LaTeX tables, 5 supplementary LaTeX tables, declarations, checklist, QA reports)
-- Aggregate tables: `reports/tables/` (legacy aggregate tables plus non-restricted `v5_*.csv` and `v5_*.json` manifests)
-- Figures: `reports/figures/` (30 PNG files: 7 main manuscript, 6 supplementary, 17 SHAP dependence plots)
-- Research protocol, variable plan, literature matrix, and source manifests: `docs/`
+- Manuscript/scientific source: manuscript text, supplementary material, BibTeX, generated-table mappings, data/reproducibility/ethics statements
+- Aggregate tables and manifests: `reports/tables/`
+- Publication figures: `reports/figures/`
+- Scientific protocol, variable plan, literature/source manifests, estimand/validity audits, Route A protocol/results, and active-result register: `docs/`
 
 ## Excluded
 
 - OECD raw data files under `data/raw/`
 - Extracted OECD `.SAV`, `.sas7bdat`, `.zip`, or equivalent raw public-use files
-- Row-level prediction output: `reports/tables/holdout_predictions.csv`
+- Row-level prediction output such as `reports/tables/holdout_predictions.csv`
 - Fitted model artifacts such as `.joblib`
 - Local virtual environments, caches, and build outputs
-- Downloaded source PDFs/HTML pages that are not needed for the public code release
-- Editorial Manager title pages, cover letters, declarations, anonymous PDFs and upload staging folders
+- Downloaded source PDFs/HTML pages not required for the public research package
+- Cover letters, upload staging material, prior-journal archives, acceptance forecasts, editorial/meta-review notes, internal reviewer simulations, and other submission-management artifacts
 
-## EAAI v5 update (2026-08-25)
+## Manuscript-active Route A material
 
-The repository now includes the v5 survey-analysis module and tests, Route A
-analysis scripts, aggregate PV/replicate/EBM/institution-cold-start results,
-manifests, and the v5 methodology/review/positioning records under
-`docs/v5_eaai/`. The institution-cold-start result is a same-cycle
-unseen-school stress test, not external institution or deployment validation.
+The public scientific package includes the v5 survey-analysis module and tests, Route A analysis scripts, aggregate PV/replicate/EBM/institution-cold-start results, manifests, and scientific methodology/validity records. The institution-cold-start result is a same-cycle unseen-school stress test, not external institution or deployment validation.
 
-## Data Boundary
+## Data boundary
 
-Readers should obtain PISA 2022 public-use files directly from the OECD PISA 2022 Database and place them in `data/raw/` before running the full pipeline. This repository should not redistribute OECD raw files.
+Readers should obtain PISA 2022 public-use files directly from the OECD PISA 2022 Database and place them in `data/raw/` before running the full pipeline. This repository does not redistribute OECD raw files.
 
-## License Note
+## Reproducibility boundary
 
-Code and repository documentation are released under the MIT License. Third-party data and source materials remain subject to their original terms.
+`requirements.txt` and `pyproject.toml` define compatible installation ranges. The final archival manuscript release must additionally include an exact environment export and checksum manifest generated from the verified manuscript run; package versions should not be guessed after the fact. See `docs/REPRODUCIBILITY.md`.
+
+## License
+
+Project-authored code and repository documentation are released under the MIT License. Third-party data and source materials remain subject to their original terms.
