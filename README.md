@@ -4,39 +4,34 @@ Reproducible analysis pipeline for the paper:
 
 **Explainable and Fairness-Audited Machine Learning for Large-Scale Educational Assessment: Multi-Method XAI and a Calibration-Parity Audit on PISA 2022 across 80 Countries**
 
-Target journal: *Engineering Applications of Artificial Intelligence* (EAAI, Elsevier).
-
 ## Overview
 
-This repository implements a fully reproducible analytical framework that combines multi-method explainable AI (XAI) with formal algorithmic-fairness evaluation on large-scale international assessment data. It predicts PISA 2022 mathematics achievement for 613,744 students across 80 countries and economies using theory-driven feature organization (Bronfenbrenner's ecological systems theory + van Dijk's ICT taxonomy), tuned XGBoost/LightGBM ensembles, four XAI methods (SHAP, permutation importance, ALE, LIME) with rank-correlation convergence validation, and intersectional fairness auditing (Equalized Odds, Demographic Parity, ABROCA).
+This repository implements a reproducible analytical framework combining multi-method explainable AI (XAI) with algorithmic-fairness evaluation on PISA 2022 mathematics data. The workflow covers 613,744 students across 80 countries and economies and incorporates PISA plausible values, survey weighting, model comparison, explanation methods, robustness checks, and subgroup/fairness audits.
 
-## EAAI v5 Route A update (2026-08-25)
+## Current manuscript-active route
 
-The current EAAI-facing analysis is a conservative model-level verification
-and validation route. It uses ten plausible values, 80 Fay--BRR replicate
-weights, population-versus-SENWT sensitivity, a matched additive EBM, and a
-whole-school unseen-institution cold-start stress test. The active values are
-not the historical row-wise-PV-mean headline:
+The manuscript-active Route A analysis uses ten mathematics plausible values, 80 Fay--BRR replicate weights, population-versus-SENWT sensitivity, a matched additive EBM, and a whole-school unseen-institution cold-start stress test.
+
+Current manuscript-active headline values:
 
 - Primary PV-pooled XGBoost: AUC 0.8865, Brier 0.1375, RMSE 59.82, R² 0.6346.
 - Matched EBM: AUC 0.8689, Brier 0.1465, RMSE 66.15, R² 0.5531.
 - Unseen-school secondary validation: AUC 0.8865, Brier 0.1358, RMSE 61.02, R² 0.6219, evaluated on 4,326 held-out schools across 80 countries.
-- The intersectional C1 signal remains descriptive: design-aware intervals cross zero and senate sensitivity attenuates or reverses point contrasts.
+- The intersectional C1 signal is descriptive: design-aware intervals cross zero and SENWT sensitivity attenuates or reverses point contrasts.
 
-The reproducible scripts, aggregate outputs, manifests and methodology records
-are in `scripts/33_*`, `scripts/34_*`, `scripts/36_*`, `scripts/37_*`,
-`src/pisa_xai/v5_survey.py`, `reports/tables/v5_*`, and `docs/v5_eaai/`.
+The corresponding scripts, aggregate outputs, manifests, and scientific methodology records are in `scripts/33_*`, `scripts/34_*`, `scripts/36_*`, `scripts/37_*`, `src/pisa_xai/v5_survey.py`, `reports/tables/v5_*`, and `docs/v5_eaai/`.
 
-The repository still excludes OECD raw data, row-level predictions, fitted
-models and submission identity materials. Obtain raw PISA files directly from
-the [OECD PISA 2022 Database](https://www.oecd.org/en/data/datasets/pisa-2022-database.html).
+Historical baseline results are intentionally separated from the active manuscript path; see `docs/LEGACY_BASELINE.md`.
 
 ## Reproducibility
 
-- **Fixed random seed**: `20260510` (set in `configs/project.json` and used across all scripts)
-- **Deterministic explanation samples**: SHAP 5,000 rows; permutation 10,000 rows × 5 repeats; ALE 5,000 rows / 20 bins; LIME 500 instances
-- **Runtime**: ~12 hours on a single workstation
-- **Weights**: final student weights `W_FSTUWT` (mean-normalized); 80 BRR replicate weights for descriptive estimates; 10 mathematics plausible values
+- **Fixed random seed:** `20260510` (`configs/project.json`).
+- **Survey design:** 10 mathematics plausible values and 80 Fay--BRR replicate weights for manuscript-active Route A analyses.
+- **Explanation samples:** SHAP 5,000 rows; permutation 10,000 rows × 5 repeats; ALE 5,000 rows / 20 bins; LIME 500 instances for the legacy/full XAI workflow where applicable.
+- **Runtime:** approximately 12 hours for the broader workflow on a single workstation; manuscript-active subsets vary by route and cached artifacts.
+- **Environment:** `requirements.txt` / `pyproject.toml` are compatibility specifications, not an exact historical lock. The final archival release must export the exact environment used for the manuscript run.
+
+See `docs/REPRODUCIBILITY.md` for the archival-release checklist.
 
 ## Setup
 
@@ -48,49 +43,57 @@ pip install -r requirements.txt
 
 ## Data
 
-Place the downloaded PISA 2022 public-use files in `data/raw/`:
+Obtain PISA 2022 public-use files from the OECD PISA 2022 Database and place the required files in `data/raw/`, for example:
 
-- Student questionnaire data (e.g., `CY08MSP_STU_QQQ.sav` / `.parquet`)
-- School questionnaire data (e.g., `CY08MSP_SCH_QQQ.sav` / `.parquet`)
+- student questionnaire data (`CY08MSP_STU_QQQ.sav` or an equivalent converted form);
+- school questionnaire data (`CY08MSP_SCH_QQQ.sav` or an equivalent converted form).
 
-Official source: [OECD PISA 2022 Database](https://www.oecd.org/en/data/datasets/pisa-2022-database.html).
+This repository does **not** redistribute OECD raw data, row-level predictions, or fitted model artifacts. See `PUBLIC_RELEASE_MANIFEST.md` and `manuscript/data_availability.md` for the public-data boundary.
 
-This repository does **not** redistribute OECD raw data files.
-
-## Run Order
+## Main run order
 
 ```bash
-python scripts/00_check_inputs.py      # verify inputs
-python scripts/01_prepare_data.py      # prepare analysis frame
-python scripts/02_describe_sample.py   # descriptive statistics (BRR + PV)
-python scripts/03_train_models.py      # train + tune models, holdout predictions
-python scripts/04_explain_models.py    # SHAP / permutation / LIME explanations
-python scripts/06_robustness_checks.py # 8 robustness checks + calibration
-python scripts/05_build_tables.py      # build result tables
+python scripts/00_check_inputs.py
+python scripts/01_prepare_data.py
+python scripts/02_describe_sample.py
+python scripts/03_train_models.py
+python scripts/04_explain_models.py
+python scripts/06_robustness_checks.py
+python scripts/05_build_tables.py
 python scripts/08_generate_latex_tables.py
-python scripts/09_visualizations.py    # publication figures
+python scripts/09_visualizations.py
 python scripts/10_counterfactual_xai.py
 python scripts/11_umap_dpi.py
 python scripts/12_multi_xai_comparison.py
 python scripts/13_explanation_stability.py
 python scripts/14_ale_analysis.py
-python scripts/15_fairness_evaluation.py   # formal fairness metrics + intersectional audit
-python scripts/23_per_country_analysis.py  # per-country performance
+python scripts/15_fairness_evaluation.py
+python scripts/23_per_country_analysis.py
 python scripts/24_mice_robustness.py
-python scripts/26_ebm_baseline.py          # glass-box baseline
+python scripts/26_ebm_baseline.py
 python scripts/27_knowledge_ablation.py
-python scripts/28_kfold_cv.py              # supplementary 5-fold CV
-python scripts/29_xai_convergence_verify.py # XAI convergence recomputation (verified rho values)
-python scripts/30_headline_intersectional.py # merged headline intersectional subgroup audit
+python scripts/28_kfold_cv.py
+python scripts/29_xai_convergence_verify.py
+python scripts/30_headline_intersectional.py
 ```
 
-## Legacy baseline (historical; not manuscript-active)
+Route A manuscript-specific scripts are documented under `docs/v5_eaai/` and in their script headers.
 
-- Tuned XGBoost: AUC = 0.903 (95% bootstrap CI [0.898, 0.907]), RMSE = 54.10 (R² = 0.681), 23% RMSE reduction over the default-parameter ridge baseline
-- XAI convergence (recomputed): cross-model SHAP ρ = 0.99; SHAP vs permutation 0.81; SHAP vs ALE 0.63; LIME diverges (ρ = 0.01) under feature correlation
-- Fairness: SES is the largest concern (ABROCA = 0.027); low-SES immigrant-background students most underserved (AUC 0.779 vs 0.880, gap 0.101, n = 2,495 in holdout)
-- Country-group holdout AUC = 0.847 — context-specific validation required before deployment
+## Repository structure
+
+- `src/` — reusable analysis modules;
+- `scripts/` — numbered end-to-end analysis steps;
+- `configs/` — frozen project configuration and seeds;
+- `tests/` — unit/regression tests;
+- `reports/tables/` — aggregate result tables and manifests;
+- `reports/figures/` — publication figures;
+- `manuscript/` — manuscript and reproducibility-support source files;
+- `docs/` — scientific protocol, source manifests, and methodology records.
+
+## Citation
+
+Use GitHub's **Cite this repository** function generated from `CITATION.cff` for the software/reproducibility repository. After formal article publication, the CFF metadata can be updated with the article as the preferred citation.
 
 ## License
 
-MIT.
+MIT for project-authored code and repository documentation. Third-party PISA data and external source materials remain subject to their original terms.
