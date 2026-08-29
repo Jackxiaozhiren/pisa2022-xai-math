@@ -23,3 +23,15 @@ jobs:
         run: python -m compileall -q src scripts tests
       - name: Run tests
         run: pytest -q
+      - name: Generate candidate release manifest
+        run: python scripts/generate_release_manifest.py > /tmp/release-manifest.sha256
+      - name: Upload candidate release manifest
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-manifest-candidate
+          path: /tmp/release-manifest.sha256
+          if-no-files-found: error
+          retention-days: 1
+      - name: Verify checked-in release manifest when present
+        if: ${{ hashFiles('RELEASE_MANIFEST.sha256') != '' }}
+        run: diff -u RELEASE_MANIFEST.sha256 /tmp/release-manifest.sha256
