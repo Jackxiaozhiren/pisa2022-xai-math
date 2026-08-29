@@ -1,50 +1,39 @@
 # Reproducibility Statement
 
-## Analysis Environment
+## Current manuscript-active analysis
 
-- Project root: `/Users/jackson/论文/pisa2022-xai-math/workspace`.
-- Python environment: `.venv` in the project root.
-- Main command convention: run scripts from the project root with `.venv/bin/python`.
-- Current validation commands:
-  - `.venv/bin/python -m py_compile src/pisa_xai/*.py scripts/*.py`
-  - `PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -p 'test_*.py'`
+The EAAI Route A analysis evaluates ten mathematics plausible values separately, uses normalized `W_FSTUWT` student weights, propagates sampling uncertainty with 80 Fay--BRR replicate weights, and reports a population-versus-senate sensitivity for the cross-country estimand.
 
-## Input Data
+Primary active values are recorded in `docs/v5_eaai/EAAI_v5_07_active_result_register.md`:
 
-The raw PISA 2022 files are not redistribution artifacts. They must be obtained by readers from the OECD PISA 2022 Database and placed under `data/raw/`.
+- XGBoost: AUC 0.88652, Brier 0.13754, RMSE 59.82284, R² 0.63458.
+- Matched additive EBM: AUC 0.86891, Brier 0.1465, RMSE 66.15436, R² 0.55314.
+- Unseen-school cold-start: AUC 0.88652, Brier 0.13584, RMSE 61.02284, R² 0.62187.
 
-Locally verified inputs are documented in `docs/sources/pisa/download_manifest.csv`:
+Legacy values such as AUC 0.903 and RMSE 54.10 are historical baseline results and are not manuscript-active.
 
-- `data/raw/STU_QQQ_SPSS.zip`
-- `data/raw/CY08MSP_STU_QQQ.SAV`
-- `data/raw/SCH_QQQ_SPSS.zip`
-- `data/raw/CY08MSP_SCH_QQQ.SAV`
-- `docs/sources/pisa/CY08MSP_CODEBOOK_27thJune24.xlsx`
-- OECD PISA 2022 technical and results report PDFs under `docs/sources/pisa/reports/`
+## Environment
 
-## Reproduction Order
+- Random seed: `20260510` (`configs/project.json`).
+- Compatibility dependencies: `requirements.txt` / `pyproject.toml`.
+- Observed manuscript-workstation package versions: `docs/ENVIRONMENT_OBSERVED_2026-08-25.txt`.
+- The v5 manifest records core versions including Python 3.9.6, pandas 2.3.3, NumPy 2.0.2, scikit-learn 1.6.1, XGBoost 2.1.4, and pyreadstat 1.2.9.
 
-Run the scripts in this order:
+No local absolute filesystem path is part of the public reproducibility contract. Run commands from the repository root.
+
+## Public verification
 
 ```bash
-.venv/bin/python scripts/00_check_inputs.py
-.venv/bin/python scripts/01_prepare_data.py
-.venv/bin/python scripts/02_describe_sample.py
-.venv/bin/python scripts/03_train_models.py
-.venv/bin/python scripts/04_explain_models.py
-.venv/bin/python scripts/06_robustness_checks.py
-.venv/bin/python scripts/05_build_tables.py
+python -m compileall -q src scripts tests
+pytest -q
 ```
 
-`scripts/05_build_tables.py` should remain last so `manuscript/generated_tables_index.md` captures all generated tables and figures.
+The independently audited 2026-08-25 research bundle passed 12/12 `test_v5_survey.py` tests.
 
-## Current Reproducibility Targets
+## Data boundary
 
-- Processed frame: `data/processed/pisa2022_math_model_frame.parquet`.
-- Main feature set: 33 predictors listed in `data/processed/feature_sets.json`.
-- Main model split: random state `20260510`, 80/20 split, `490,995` training rows and `122,749` holdout rows.
-- Headline model results: LightGBM classification AUC about `0.8904`; LightGBM regression RMSE about `57.61`.
+Raw PISA 2022 files are not redistribution artifacts. Obtain them from the OECD PISA 2022 Database and place the required inputs under `data/raw/`. The public repository contains aggregate outputs and scientific manifests rather than student-level predictions.
 
-## Public Release Boundary
+## Inference boundary
 
-The public repository should include source code, configuration, manuscript source, non-restricted generated tables/figures, and source manifests. It should not include OECD raw data files, extracted raw `.SAV` files, model artifacts containing raw-row-derived fitted state if the release policy is uncertain, local caches, personal metadata, or credentials.
+The Fay--BRR intervals in the active analysis describe fixed-model evaluation uncertainty plus between-PV imputation variance. They are not full model-training uncertainty and are not individual-level inference. The unseen-school analysis is a same-cycle cold-start stress test, not external institutional validation or deployment evidence.
