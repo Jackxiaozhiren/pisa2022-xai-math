@@ -8,9 +8,9 @@
 - [x] Exact submission-source package audited; the source-only `reports/v5_` path typo was corrected to `reports/tables/v5_` without changing scientific results.
 - [x] Stale TLT manuscript sources removed from the active repository tree; history remains in Git.
 - [x] Public release excludes raw OECD files, row-level predictions, fitted models, venv/caches, and submission-management material.
-- [ ] CI passes on the release-candidate branch.
-- [ ] Freeze release date and set `CITATION.cff` to `version: 1.0.0`.
-- [ ] Generate and commit deterministic release SHA-256 manifest.
-- [ ] Re-run CI on that exact commit.
+- [x] CI passes on the release-candidate branch before final metadata freeze.
+- [x] `CITATION.cff` frozen as `version: 1.0.0` with release date 2026-08-29.
+- [x] Deterministic release SHA-256 manifest generation/verification added to CI.
+- [ ] Re-run CI on the exact final candidate containing `RELEASE_MANIFEST.sha256`.
 - [ ] Merge and publish GitHub release/tag `v1.0.0`.
 - [ ] Attach the corrected 2026-08-25 LaTeX/source package to the release.
