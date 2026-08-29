@@ -1,69 +1,28 @@
 # Generated Analysis Artifacts
 
-## Tables
+## Manuscript-active Route A outputs
 
-- `alternative_low_performer_labels.csv`
-- `calibration_bins.csv`
-- `calibration_metrics.csv`
-- `classification_lightgbm_permutation_importance.csv`
-- `classification_threshold_sensitivity.csv`
-- `complete_case_sensitivity.csv`
-- `counterfactual_aggregate.csv`
-- `counterfactual_detail.csv`
-- `counterfactual_magnitude.csv`
-- `counterfactual_query_baselines.csv`
-- `counterfactual_reachability_by_escs.csv`
-- `country_fixed_effects_sensitivity.csv`
-- `country_group_holdout_metrics.csv`
-- `digital_feature_importance.csv`
-- `digital_poverty_index.csv`
-- `explanation_artifacts.csv`
-- `explanation_stability.csv`
-- `explanation_stability_detail.csv`
-- `holdout_predictions.csv`
-- `hyperparameter_tuning_classification.csv`
-- `hyperparameter_tuning_regression.csv`
-- `model_metrics.csv`
-- `multi_xai_comparison.csv`
-- `oecd_holdout_metrics.csv`
-- `regression_lightgbm_permutation_importance.csv`
-- `sample_descriptives_by_country.csv`
-- `sample_summary.csv`
-- `subgroup_descriptives.csv`
-- `subgroup_holdout_metrics.csv`
-- `variable_audit.csv`
-- `weighted_descriptive_se.csv`
-- `xai_ranking_consistency.csv`
+Primary aggregate evidence is under `reports/tables/`:
 
-## Figures
+- `v5_pv_specific_metrics.csv`
+- `v5_replicate_weight_uncertainty.csv`
+- `v5_pv_pooled_metrics.csv`
+- `v5_population_vs_senate_weights.csv`
+- `v5_intersectional_design_aware_ci.csv`
+- `v5_analysis_manifest.json`
+- `v5_controlled_ebm_baseline.csv` and `v5_controlled_ebm_manifest.json`
+- `v5_institution_cold_start_pooled_metrics.csv`
+- `v5_institution_cold_start_intersectional_ci.csv`
+- `v5_institution_cold_start_senate_sensitivity.csv`
+- `v5_institution_cold_start_split_audit.csv`
+- `v5_institution_cold_start_manifest.json`
 
-- `calibration_curves.png`
-- `classification_lightgbm_shap_summary.png`
-- `conceptual_framework.png`
-- `counterfactual_importance.png`
-- `counterfactual_magnitude.png`
-- `counterfactual_reachability_escs.png`
-- `country_heterogeneity.png`
-- `digital_feature_importance.png`
-- `digital_poverty_index.png`
-- `explanation_stability.png`
-- `methodology_flowchart.png`
-- `multi_xai_comparison.png`
-- `regression_lightgbm_shap_summary.png`
-- `shap_dependence_ICTEFFIC_vs_HOMEPOS.png`
-- `shap_dependence_ICTEFFIC_vs_ICTHOME.png`
-- `shap_dependence_ICTEFFIC_vs_ICTSCH.png`
-- `shap_dependence_ICTEFFIC_vs_ICTSUBJ.png`
-- `shap_dependence_ICTEFFIC_vs_MATHEFF.png`
-- `shap_dependence_ICTHOME_vs_ICTSCH.png`
-- `shap_dependence_ICTRES_vs_HOMEPOS.png`
-- `shap_dependence_ICTRES_vs_ICTEFFIC.png`
-- `shap_dependence_ICTRES_vs_ICTHOME.png`
-- `shap_dependence_ICTRES_vs_ICTSCH.png`
-- `shap_dependence_ICTRES_vs_ICTSUBJ.png`
-- `shap_dependence_ICTRES_vs_MATHEFF.png`
-- `shap_dependence_ICTSUBJ_vs_HOMEPOS.png`
-- `shap_dependence_ICTSUBJ_vs_ICTHOME.png`
-- `shap_dependence_ICTSUBJ_vs_ICTSCH.png`
-- `shap_dependence_ICTSUBJ_vs_MATHEFF.png`
-- `umap_projections.png`
+The manuscript-active interpretation/claim register is under `docs/v5_eaai/`.
+
+## Legacy/full-analysis artifacts
+
+Older model metrics, XAI rankings, counterfactual diagnostics, country holdouts, calibration tables, and figures remain available as historical/diagnostic material. They must not be substituted for the v5 active performance claims. See `docs/LEGACY_BASELINE.md`.
+
+## Excluded artifacts
+
+Row-level holdout predictions, fitted models, raw OECD files, local absolute paths, caches, and submission-management files are excluded from the public release boundary.

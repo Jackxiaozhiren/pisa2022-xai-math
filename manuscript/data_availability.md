@@ -1,7 +1,7 @@
-# Data Availability Statement
+# Data and Code Availability
 
-The data used in this study are publicly available from the OECD PISA 2022 Database: https://www.oecd.org/en/data/datasets/pisa-2022-database.html.
+PISA 2022 public-use data are available from the OECD PISA 2022 Database. The analysis code, configuration, manuscript support documentation, and non-restricted aggregate outputs are publicly available in this repository.
 
-The analysis code, configuration files, manuscript source, and non-restricted derived tables/figures will be made available in a public repository upon publication or during peer review, subject to OECD data-use terms and journal requirements.
+The manuscript-active v5 evidence is under `reports/tables/v5_*`, `docs/v5_eaai/`, `scripts/33_*`, `scripts/34_*`, `scripts/36_*`, `scripts/37_*`, and `src/pisa_xai/v5_survey.py`.
 
-The repository will not redistribute OECD raw public-use data files. Readers can obtain those files directly from the OECD PISA 2022 Database and reproduce the analysis by placing the student and school questionnaire files in `data/raw/` and running the documented pipeline.
+This repository does not redistribute OECD raw public-use files, row-level holdout predictions, or fitted model artifacts. Readers should obtain the student and school questionnaire files directly from the OECD and place the required inputs under `data/raw/` before running the full pipeline.
