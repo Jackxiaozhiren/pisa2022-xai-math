@@ -4,6 +4,13 @@ Reproducibility repository for the EAAI manuscript:
 
 **A Reproducible Model-Level Verification and Validation Protocol for Predictive AI in High-Impact Educational Assessment: Evidence from PISA 2022**
 
+## For readers and reviewers
+
+- **Reproduce the analysis:** [Reproducibility instructions](docs/REPRODUCIBILITY.md) and [research protocol](docs/research_protocol.md)
+- **Check exactly what was released:** [Public release manifest](PUBLIC_RELEASE_MANIFEST.md) and its SHA-256 checksums in `RELEASE_MANIFEST.sha256`
+- **Cite responsibly:** [Citation metadata](CITATION.cff); manuscript status and the active route are described below
+- **Data use:** Public availability of code does not change the OECD or other third-party data terms.
+
 ## Current manuscript-active route
 
 The manuscript-active analysis is Route A: ten mathematics plausible-value-specific models, normalized student weights, 80 Fay--BRR replicate weights, population-versus-senate sensitivity, a matched additive Explainable Boosting Machine (EBM), and an unseen-school cold-start stress test. The analysis is explicitly model-level: it does not treat PISA plausible values as individual student scores and does not claim deployment or intervention effectiveness.
