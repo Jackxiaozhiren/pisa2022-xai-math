@@ -1,6 +1,8 @@
 # PISA 2022 Model-Level Verification and Validation
 
-Reproducibility repository for the EAAI manuscript:
+> **Publication status:** This is a research-code and validation record, not a peer-reviewed journal publication. Journal names and submission snapshots document earlier manuscript routes; a GitHub release or data/software DOI does not mean that a journal accepted the work.
+
+Research software and reproducibility materials for the educational model-validation study:
 
 **A Reproducible Model-Level Verification and Validation Protocol for Predictive AI in High-Impact Educational Assessment: Evidence from PISA 2022**
 
